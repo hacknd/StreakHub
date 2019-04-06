@@ -1,3 +1,4 @@
 game
 *.pyc
+migrations
 *__pycache__/
