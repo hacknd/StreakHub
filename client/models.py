@@ -98,3 +98,10 @@ class Member(models.Model):
 	def save_user_profile(sender, instance, **kwargs):
 		instance.members.save()
 
+
+class RegistrationAudit(models.Model):
+	pass
+
+	
+	class Meta:
+		verbose_name_plural = 'RegistrationAudits'
