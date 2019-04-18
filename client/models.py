@@ -58,8 +58,9 @@ class Account(AbstractUser):
 
 	def __str__(self):
 		return self.email
+
 class Member(models.Model):
-	user = models.OneToOneField(Account, on_delete=models.CASCADE,related_name="members")
+	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="members")
 	username= models.CharField(max_length=20,unique=True)
 	full_name= models.CharField(max_length=20)
 	email= models.EmailField()
