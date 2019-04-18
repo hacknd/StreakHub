@@ -3,7 +3,9 @@ from django.core.validators import RegexValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as __
+from .managers import CustomAccountManager
 class Role(models.Model):
 	'''
 	The Role Entries are managed in the system to decide who is who in the system
