@@ -37,12 +37,14 @@ class Role(models.Model):
 		return self.get_id_display()
 
 class Account(AbstractUser):
-	is_active = models.BooleanField(default=False)
+	username = models.CharField(max_length=13, unique=True)
+	email = models.EmailField(__('email address'), unique=True)
+	is_email_active = models.BooleanField(default=False)
 	is_phone_active = models.BooleanField(default=False)
 	role = models.ManyToManyField('client.role',related_name='user_role')
 
 	def initialize_default_role(self):
-		for role_choice_id in [ 1 ]:
+		for role_choice_id in [ 1 , 2 ]:
 			roleModel = Role(id=role_choice_id)
 			roleModel.save()
 			self.role.add(roleModel)
