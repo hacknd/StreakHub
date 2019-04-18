@@ -1,5 +1,5 @@
 game
 *.pyc
-migrations
-db.sqlite3
+*migrations
+*db.sqlite3
 *__pycache__/
