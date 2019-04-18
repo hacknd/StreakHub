@@ -31,6 +31,18 @@ class Role(models.Model):
 
 	def __str__(self):
 		return self.get_id_display()
+
+class Account(AbstractUser):
+	is_active = models.BooleanField(default=False)
+	is_phone_active = models.BooleanField(default=False)
+	role = models.ManyToManyField('client.role',related_name='user_role')
+
+	def initialize_default_role(self):
+		for role_choice_id in [ 1 ]:
+			roleModel = Role(id=role_choice_id)
+			roleModel.save()
+			self.role.add(roleModel)
+
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
