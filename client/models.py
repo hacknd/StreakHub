@@ -100,6 +100,8 @@ class Member(models.Model):
 
 
 class RegistrationAudit(models.Model):
+	user_id=models.CharField(max_length=300,unique=True, default='1')
+	session_id = models.CharField(max_length=300, unique=True, default='1')
 	pass
 
 	
