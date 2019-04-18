@@ -66,6 +66,30 @@ class Member(models.Model):
 
 	class Meta:
 		verbose_name_plural = "Members"	
+
+	@receiver
+	def create_member_profile(sender, instance, created, **kwargs):
+		if created:
+			Members.objects.create(user=instance)
+
+
+	@receiver
+	def save_user_profile(sender, instance, **kwargs):
+		instance.members.save()
+
+
+class RegistrationAudit(models.Model):
+	user_id=models.CharField(max_length=300,unique=True, default='1')
+	session_id = models.CharField(max_length=300, unique=True, default='1')
+	pass
+
+	
+	class Meta:
+		verbose_name_plural = 'RegistrationAudits'
+
+
+
+
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
