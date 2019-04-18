@@ -4,7 +4,33 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 
+class Role(models.Model):
+	'''
+	The Role Entries are managed in the system to decide who is who in the system
 
+	'''
+	ACCOUNT = 1
+	TOURNAMENT_ADMIN = 2
+	TOURNAMENT_SUPERVISOR = 3
+	TOURNAMENT_FS = 4
+	ADVERT_ACCOUNT = 5
+	VERIFIED_ACCOUNT = 6
+
+
+	ROLE_CHOICES = (
+		(ACCOUNT, 'member'),
+		(TOURNAMENT_ADMIN, 'tournament_admin'),
+		(TOURNAMENT_SUPERVISOR, 'tournament_supervisor'),
+		(TOURNAMENT_FS, 'tournament_field_scorer'),
+		(ADVERT_ACCOUNT, 'advertisement_account'),
+		(VERIFIED_ACCOUNT, 'verified_account')
+	)
+
+	id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True, default=ACCOUNT)
+
+
+	def __str__(self):
+		return self.get_id_display()
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
