@@ -41,14 +41,7 @@ class Account(AbstractUser):
 	email = models.EmailField(__('email address'), unique=True)
 	is_email_active = models.BooleanField(default=False)
 	is_phone_active = models.BooleanField(default=False)
-	role = models.ManyToManyField('client.role',related_name='user_role')
-
-	def initialize_default_role(self):
-		for role_choice_id in [ 1 , 2 ]:
-			roleModel = Role(id=role_choice_id)
-			roleModel.save()
-			self.role.add(roleModel)
-
+	
 
 
 	USERNAME_FIELD = 'username'
@@ -60,7 +53,7 @@ class Account(AbstractUser):
 		return self.email
 
 class Member(models.Model):
-	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="members")
+	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="user_members")
 	username= models.CharField(max_length=20,unique=True)
 	full_name= models.CharField(max_length=20)
 	email= models.EmailField()
@@ -74,9 +67,13 @@ class Member(models.Model):
 	bookmarks = models.ManyToManyField('client.bookmarks', blank=True, related_name='bookmarks_member')
 	following = models.ManyToManyField('client.following', blank=True, related_name='following_member')
 	followers = models.ManyToManyField('client.followers', blank=True, related_name='followers_member')
+	role = models.ManyToManyField('client.role',related_name='user_role')
 
-	def __str__(self):
-		return self.email
+	def initialize_default_role(self):
+		for role_choice_id in [ 1 , 2 ]:
+			roleModel = Role(id=role_choice_id)
+			roleModel.save()
+			self.role.add(roleModel)
 
 	class Meta:
 		verbose_name_plural = "Members"	
@@ -94,8 +91,15 @@ class Member(models.Model):
 	def save_user_profile(sender, instance, **kwargs):
 		instance.members.save()
 
-	def setup_email_to_instance(self):
-		self.user.email = self.email
+	def setup_to_instance(self):
+		self.user.user_members.email = self.email
+		self.user.user_members.username = self.username
+
+
+
+	def __str__(self):
+		return self.username 
+
 
 
 class RegistrationAudit(models.Model):
