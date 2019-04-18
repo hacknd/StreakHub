@@ -43,6 +43,29 @@ class Account(AbstractUser):
 			roleModel.save()
 			self.role.add(roleModel)
 
+
+
+class Member(models.Model):
+	user = models.OneToOneField(Account, on_delete=models.CASCADE,related_name="members")
+	username= models.CharField(max_length=20,unique=True)
+	full_name= models.CharField(max_length=20)
+	email= models.EmailField()
+	phone_regex= RegexValidator(regex=r'^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3})|(\(?\d{2,3}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+	bio = models.CharField(max_length=300)
+	profile_pic = models.ImageField()
+	cover_pic = models.ImageField()
+	community = models.ManyToManyField('client.community',  blank=True,related_name='community_member')
+	tournament = models.ManyToManyField('client.tournament', blank=True,related_name='tournament_member')
+	bookmarks = models.ManyToManyField('client.bookmarks', blank=True, related_name='bookmarks_member')
+	following = models.ManyToManyField('client.following', blank=True, related_name='following_member')
+	followers = models.ManyToManyField('client.followers', blank=True, related_name='followers_member')
+
+	def __str__(self):
+		return self.username
+
+	class Meta:
+		verbose_name_plural = "Members"	
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
