@@ -76,20 +76,26 @@ class Member(models.Model):
 	followers = models.ManyToManyField('client.followers', blank=True, related_name='followers_member')
 
 	def __str__(self):
-		return self.username
+		return self.email
 
 	class Meta:
 		verbose_name_plural = "Members"	
 
-	@receiver
+	def save_user(self):
+		self.save()
+
+	@receiver(post_save, sender=get_user_model())
 	def create_member_profile(sender, instance, created, **kwargs):
 		if created:
-			Members.objects.create(user=instance)
+			Member.objects.create(user=instance)
 
 
-	@receiver
+	@receiver(post_save, sender=get_user_model())
 	def save_user_profile(sender, instance, **kwargs):
 		instance.members.save()
+
+	def setup_email_to_instance(self):
+		self.user.email = self.email
 
 
 class RegistrationAudit(models.Model):
