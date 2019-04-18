@@ -22,6 +22,7 @@ class Role(models.Model):
 
 	ROLE_CHOICES = (
 		(ACCOUNT, 'member'),
+		(INDIVIDUAL_ACCOUNT, 'individual_account'),
 		(TOURNAMENT_ADMIN, 'tournament_admin'),
 		(TOURNAMENT_SUPERVISOR, 'tournament_supervisor'),
 		(TOURNAMENT_FS, 'tournament_field_scorer'),
