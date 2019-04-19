@@ -50,7 +50,7 @@ class Account(AbstractUser):
 	objects = CustomAccountManager()
 
 	def __str__(self):
-		return self.email
+		return self.username
 
 class Member(models.Model):
 	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="user_members")
@@ -67,11 +67,11 @@ class Member(models.Model):
 	bookmarks = models.ManyToManyField('client.bookmarks', blank=True, related_name='bookmarks_member')
 	following = models.ManyToManyField('client.following', blank=True, related_name='following_member')
 	followers = models.ManyToManyField('client.followers', blank=True, related_name='followers_member')
-	role = models.ManyToManyField('client.role',related_name='user_role')
+	roles = models.ManyToManyField('client.role',related_name='user_role')
 
 	def initialize_default_role(self):
 		for role_choice_id in [ 1 , 2 ]:
-			roleModel = Role(id=role_choice_id)
+			roleModel = Role.objects.create(id=role_choice_id)
 			roleModel.save()
 			self.role.add(roleModel)
 
@@ -89,16 +89,10 @@ class Member(models.Model):
 
 	@receiver(post_save, sender=get_user_model())
 	def save_user_profile(sender, instance, **kwargs):
-		instance.members.save()
-
-	def setup_to_instance(self):
-		self.user.user_members.email = self.email
-		self.user.user_members.username = self.username
-
-
+		instance.user_members.save()
 
 	def __str__(self):
-		return self.username 
+		return self.user.username 
 
 
 
