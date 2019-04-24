@@ -38,9 +38,11 @@ class Role(models.Model):
 
 class Account(AbstractUser):
 	username = models.CharField(max_length=13, unique=True)
-	email = models.EmailField(__('email address'), unique=True)
+	email = models.EmailField(__('email address'))
 	is_email_active = models.BooleanField(default=False)
-	is_phone_active = models.BooleanField(default=False)
+	phone_regex= RegexValidator(regex=r'^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3})|(\(?\d{2,3}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+	is_phone_active = models.BooleanField(default=False) # Activating the phone number to be of use.
 	
 
 
