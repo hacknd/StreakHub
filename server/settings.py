@@ -42,8 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'client',
     'rest_framework',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
+    'knox',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT': ('client.backends.AuthApiAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'knox.auth.TokenAuthentication',), 
+}
 
 AUTH_USER_MODEL = 'client.Account'
 
