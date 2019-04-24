@@ -1,7 +1,10 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-
-
+from client.models import Member
+from rest_framework.test import APITestCase
+from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.authtoken.models import Token
 Account = get_user_model()
 
 # Create your tests here.
@@ -23,10 +26,15 @@ class AccountManagerTests(TestCase):
 
 	def test_create_superuser(self):
 		admin_account = Account.objects.create_superuser(username='super',password='foo',email='')
+		admin_member = Member.objects.get(user=admin_account)
 		self.assertEqual(admin_account.username, 'super')
 		self.assertTrue(admin_account.is_active)
 		self.assertTrue(admin_account.is_staff)
 		self.assertTrue(admin_account.is_superuser)
+		self.assertTrue(admin_member.is_admin)
+		self.assertEqual(admin_account.username, admin_member.username)
+		self.assertEqual(admin_account.phone_number, admin_member.phone_number)
+
 		# print(type(admin_account.email))
 		self.assertEqual(len(admin_account.email), 0)
 		with self.assertRaises(ValueError):
