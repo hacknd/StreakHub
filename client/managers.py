@@ -22,7 +22,7 @@ class CustomAccountManager(BaseUserManager):
 		if not email:
 			raise ValueError(__('The Email must be set'))
 		email = self.normalize_email(email)
-		account = self.model(email=email, **extra_fields)
+		account = self.model(username=username, email=email, **extra_fields)
 		account.set_password(password)
 		account.save()
 		return account 	
