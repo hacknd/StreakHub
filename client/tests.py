@@ -4,7 +4,8 @@ from client.models import Member
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
+from knox.models import AuthToken as Token
 Account = get_user_model()
 
 # Create your tests here.
@@ -45,7 +46,7 @@ class AccountManagerTests(TestCase):
 
 
 
-class AccountsTest(APITestCase):
+class AccountsCreationTest(APITestCase):
 	def setUp(self):
 		
 		# Originally creating a user from scratch to add up to users at the same time
@@ -74,7 +75,8 @@ class AccountsTest(APITestCase):
 		self.assertEqual(response.data['username'], data['username'])
 		self.assertEqual(response.data['email'], data['email'])
 		token = Token.objects.get(user=user)
-		self.assertEqual(response.data['token'], token.key)
+		print(response.data['token'])
+		self.assertEqual(response.data['token'].username, Token)
 
 	
 	def test_create_account_with_short_password(self):
@@ -176,6 +178,54 @@ class AccountsTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 		self.assertEqual(Account.objects.count(), 1)
 		self.assertEqual(len(response.data['email']), 1)
-			
+		
+
+
+
+class AccountLoginTest(APITestCase):
+	def setUp(self):
+		# Originally creating a user from scratch to add up to users at the same time
+		self.test_user = Account.objects.create_user(username='testuser', email='test@example.com',password='testpassword',phone_number='+254715943570')
+		self.token_test_user = Token.objects.create(user=self.test_user)[1]
+		#Url for creating an account
+		self.create_url = reverse('account-login')
+
+
+	def test_authenticate_account_with_username(self):
+		"""
+		Ensuring the user is in the system and does the spot yaamean I was listening to reggae writing affi man
+		"""	
+		account = Account.objects.latest('id')
+		token = Token.objects.create(account)[1]
+		data = {
+		'username':'testuser',
+		'password':'testpassword',
+		'token': token
+		}	
+
+		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(response.data['token'], self.token_test_user.key)
+		self.assertEqual(response.data['username'],data['username'])
+		self.assertTrue(account.check_password(data['password']))
+		self.assertEqual(Account.objects.count(), 1)
+
+	def test_authenticate_account_with_email(self):
+		"""
+		Ensuring the user is in the system and does the activatian with email yaaa mean is a plan
+		"""	
+		data = {
+			'username':'test@example.com',
+			'password':'testpassword',
+			'token':self.token_test_user,
+		}
+
+		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(response.data['token'], self.token_test_user.key)
+		self.assertEqual(response.data['email'],data['username'])
+		self.assertTrue(account.check_password(data['password']))
+		self.assertEqual(Account.objects.count(), 1)
+
+
+
 
 		
