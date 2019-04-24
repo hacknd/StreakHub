@@ -100,9 +100,9 @@ class Member(models.Model):
 		
 
 	@receiver(post_save, sender=get_user_model())
-	def save_user_profile(sender, instance, **kwargs):
+	def save_member_account(sender, instance, **kwargs):
 		instance.user_members.save()
-
+		
 	def __str__(self):
 		return self.user.username 
 
