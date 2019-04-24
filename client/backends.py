@@ -15,7 +15,7 @@ class AuthBackend(object):
 			if email == '':
 				return None
 			# Try to fetch the account by search the username or email field
-			user = Account.objects.get(Q(username=username)|Q(email=username))
+			user = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
 			if user.check_password(password):
 				return user
 		except Account.DoesNotExist:
