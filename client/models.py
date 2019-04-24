@@ -89,10 +89,15 @@ class Member(models.Model):
 		self.save()
 
 	@receiver(post_save, sender=get_user_model())
-	def create_member_profile(sender, instance, created, **kwargs):
+	def create_member_account(sender, instance, created, **kwargs):
 		if created:
-			Member.objects.create(user=instance)
-
+			if instance.is_superuser == True:
+				Member.objects.create(user=instance, username=instance.username, email=instance.email, is_admin=True, phone_number=instance.phone_number)
+				Member.initialize_default_role(Member.objects.get(user=instance))
+			else:		
+				Member.objects.create(user=instance, username=instance.username, email=instance.email, phone_number=instance.phone_number)
+				Member.initialize_default_role(Member.objects.get(user=instance))
+		
 
 	@receiver(post_save, sender=get_user_model())
 	def save_user_profile(sender, instance, **kwargs):
