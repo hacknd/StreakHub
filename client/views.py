@@ -3,27 +3,55 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework.authentication import SessionAuthentication , BasicAuthentication
-from rest_framework import status
+from rest_framework import status, generics, mixins
 from client.serializers import *
 from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
+from knox.models import AuthToken
 
 
-# Create your views here.
 
-class AccountCreate(APIView):
+class AccountCreateAPI(generics.GenericAPIView):
 	"""
 	Create an account from scratch
 	"""
-	def post(self, request, format='json'):
-		serializer = AccountSerializer(data=request.data)
+	queryset=get_user_model()
+	serializer_class=CreateAccountSerializer
+
+
+	def post(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
 		if serializer.is_valid():
-			user = serializer.save()
-			if user:
-				token = Token.objects.create(user=user)
-				json = serializer.data
-				json['token'] = token.key
+			account = serializer.save()
+			if account:
+				custom_token=AuthToken.objects.create(account)[0]
+				token= custom_token
+				json = AccountSerializer(account, context=self.get_serializer_context()).data
+				json['token'] = token
 				return Response(json,
 					status=status.HTTP_201_CREATED
 					)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)	
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			
+		
+class AccountLoginAPI(generics.GenericAPIView):
+	"""
+	Log in an account to the system
+	"""
+	
+	queryset=get_user_model()
+	serializer_class=LoginUserSerializer
+
+	def post(self, request, *args , **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		if serializer.is_valid():
+			account = serializer.validated_data
+			if account:
+				token = AuthToken.objects.create(account)[1]
+				json=AccountSerializer(account, context=self.get_serializer_context()).data
+				json['token'] = token
+				return Response(json,
+					status=status.HTTP_201_CREATED
+					)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+				
