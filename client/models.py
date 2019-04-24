@@ -71,12 +71,17 @@ class Member(models.Model):
 	followers = models.ManyToManyField('client.followers', blank=True, related_name='followers_member')
 	roles = models.ManyToManyField('client.role',related_name='user_role')
 
-	def initialize_default_role(self):
-		for role_choice_id in [ 1 , 2 ]:
-			roleModel = Role.objects.create(id=role_choice_id)
-			roleModel.save()
-			self.role.add(roleModel)
 
+	def initialize_default_role(user):
+		for role_choice_id in [ 1, 2 ]:
+			if len(Role.objects.all()) < 2:
+				if len(Role.objects.filter(id__in=[ 1, 2])) < 2:
+					roleModel = Role.objects.create(id=role_choice_id)
+					roleModel.save()
+					user.roles.add(roleModel)
+			else:
+				roleModel = Role.objects.get(id=role_choice_id)
+				user.roles.add(roleModel)
 	class Meta:
 		verbose_name_plural = "Members"	
 
