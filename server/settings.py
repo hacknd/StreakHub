@@ -47,10 +47,20 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+# REST_FRAMEWORK = {
+#     'DEFAULT': ('client.backends.AuthBackend',
+#         'rest_framework.authentication.BasicAuthentication',
+#         'knox.auth.TokenAuthentication',), 
+# }
+
 REST_FRAMEWORK = {
-    'DEFAULT': ('client.backends.AuthBackend',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'knox.auth.TokenAuthentication',), 
+        )
 }
 
 AUTH_USER_MODEL = 'client.Account'
