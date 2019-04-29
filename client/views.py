@@ -39,8 +39,23 @@ class AccountCreateAPI(generics.GenericAPIView):
 # 	Log in an account to the system
 # 	"""
 	
-	queryset=get_user_model()
-	serializer_class=LoginUserSerializer
+# 	queryset=get_user_model()
+# 	serializer_class=LoginUserSerializer
+
+# 	def post(self, request, *args , **kwargs):
+# 		serializer = self.get_serializer(data=request.data)
+# 		if serializer.is_valid():
+# 			account = serializer.validated_data
+# 			if account:
+# 				token = AuthToken.objects.create(account)[1]
+# 				json=AccountSerializer(account, context=self.get_serializer_context()).data
+# 				json['token'] = token
+# 				return Response(json,
+# 					status=status.HTTP_201_CREATED
+# 					)
+# 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 from django.contrib.auth import login
 from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -61,16 +76,3 @@ class AccountLoginAPI(KnoxLoginView):
 	# 	return super(AccountLoginAPI, self).post(request, format='json')
 
 
-	def post(self, request, *args , **kwargs):
-		serializer = self.get_serializer(data=request.data)
-		if serializer.is_valid():
-			account = serializer.validated_data
-			if account:
-				token = AuthToken.objects.create(account)[1]
-				json=AccountSerializer(account, context=self.get_serializer_context()).data
-				json['token'] = token
-				return Response(json,
-					status=status.HTTP_201_CREATED
-					)
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-				
