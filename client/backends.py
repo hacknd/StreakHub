@@ -19,12 +19,12 @@ class AuthBackend:
 			# Try to fetch the account by search the username or email field
 			account = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
 			if account.check_password(password):
-				print('oooooof')
+				print('/llloooooof')
 				return account
 		except Account.DoesNotExist:
 			# Run the default password hasher once toreduce the timing
 			# difference between an existign and a non existing existing user
-			return Account.set_password(password)
+			return Account.set_password(self, raw_password=password)
 		else:
 			if account.check_password(password) and self.user_can_authenticate(user):
 				return	account
@@ -37,19 +37,20 @@ class AuthBackend:
 		return account if self.user_can_authenticate(account) else None 			
 
 
-class AuthApiAuthentication(authentication.BaseAuthentication):
-	def authenticate(self, request, username=None, password=None, token=None, **kwargs):
-		if username is None:
-			username = kwargs.get(Account.USERNAME_FIELD)
-		try:
-			# Try to fetch the account by search the username or email field
-			account = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
-			if account.check_password(password):
-				print('oooooof')
-				return account
-		except Account.DoesNotExist:
-			# Run the default password hasher once toreduce the timing
-			# difference between an existign and a non existing existing user
-			raise exceptions.AuthenticationFailed('No such user')
+# class AuthApiAuthentication:
+# 	def authenticate(self, request, **kwargs):
+# 		if username is None:
+# 			username = kwargs.get(Account.USERNAME_FIELD)
+# 		try:
+# 			print('oof')
+# 			# Try to fetch the account by search the username or email field
+# 			# account = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
+# 			if account.check_password(password):
+# 				print('oooooof')
+# 				return account
+# 		except Account.DoesNotExist:
+# 			# Run the default password hasher once toreduce the timing
+# 			# difference between an existign and a non existing existing user
+# 			raise exceptions.AuthenticationFailed('No such user')
 		
-		return (user, None)
+# 		return (account, None)
