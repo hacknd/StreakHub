@@ -34,10 +34,10 @@ class AccountCreateAPI(generics.GenericAPIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			
 		
-class AccountLoginAPI(generics.GenericAPIView):
-	"""
-	Log in an account to the system
-	"""
+# class AccountLoginAPI(generics.GenericAPIView):
+# 	"""
+# 	Log in an account to the system
+# 	"""
 	
 	queryset=get_user_model()
 	serializer_class=LoginUserSerializer
