@@ -5,11 +5,11 @@ from rest_framework.response import Response
 # from rest_framework.authentication import SessionAuthentication , BasicAuthentication
 from rest_framework import status, generics, mixins
 from client.serializers import *
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 # from rest_framework.authtoken.models import Token
 from knox.models import AuthToken
-
-
+from rest_framework  import authentication 
+# from knox.views import 
 
 class AccountCreateAPI(generics.GenericAPIView):
 	"""
