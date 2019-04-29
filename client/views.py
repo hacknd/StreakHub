@@ -8,7 +8,8 @@ from client.serializers import *
 from django.contrib.auth import get_user_model, login
 # from rest_framework.authtoken.models import Token
 from knox.models import AuthToken
-from rest_framework  import authentication 
+from rest_framework  import authentication , permissions
+from rest_framework.decorators import api_view
 # from knox.views import 
 
 class AccountCreateAPI(generics.GenericAPIView):
