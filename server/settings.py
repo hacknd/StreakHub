@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT': ('client.backends.AuthApiAuthentication',
+    'DEFAULT': ('client.backends.AuthBackend',
         'rest_framework.authentication.BasicAuthentication',
         'knox.auth.TokenAuthentication',), 
 }
