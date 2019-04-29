@@ -41,6 +41,25 @@ class AccountCreateAPI(generics.GenericAPIView):
 	
 	queryset=get_user_model()
 	serializer_class=LoginUserSerializer
+from django.contrib.auth import login
+from rest_framework import permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
+from rest_framework.authentication import BasicAuthentication
+
+
+class AccountLoginAPI(KnoxLoginView):
+	
+	authentication_classes = [BasicAuthentication]
+	# permission_classes = (permissions.AllowAny, )
+
+	# def post(self, request, format=None):
+	# 	serializer = AuthTokenSerializer
+	# 	serialize.is_valid(raise_exception=True)
+	# 	account = serializer.validated_data['user']
+	# 	login(request, account)
+	# 	return super(AccountLoginAPI, self).post(request, format='json')
+
 
 	def post(self, request, *args , **kwargs):
 		serializer = self.get_serializer(data=request.data)
