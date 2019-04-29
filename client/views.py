@@ -8,7 +8,8 @@ from client.serializers import *
 from django.contrib.auth import get_user_model, login
 # from rest_framework.authtoken.models import Token
 from knox.models import AuthToken
-from rest_framework  import authentication 
+from rest_framework  import authentication , permissions
+from rest_framework.decorators import api_view
 # from knox.views import 
 
 class AccountCreateAPI(generics.GenericAPIView):
@@ -54,25 +55,31 @@ class AccountCreateAPI(generics.GenericAPIView):
 # 					status=status.HTTP_201_CREATED
 # 					)
 # 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+User = get_user_model()
 
 
-from django.contrib.auth import login
-from rest_framework import permissions
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.views import LoginView as KnoxLoginView
-from rest_framework.authentication import BasicAuthentication
+@api_view(['GET'])
+def current_user(request):
+	"""
+	Determining the current user by their token
+
+	"""
+
+	serializer = UserSerializer(request.user)
+	return Response(serializer.data)
 
 
-class AccountLoginAPI(KnoxLoginView):
-	
-	authentication_classes = [BasicAuthentication]
-	# permission_classes = (permissions.AllowAny, )
+class UserListJWT(APIView):
+	"""
+	Creating a user
+	"""
 
-	# def post(self, request, format=None):
-	# 	serializer = AuthTokenSerializer
-	# 	serialize.is_valid(raise_exception=True)
-	# 	account = serializer.validated_data['user']
-	# 	login(request, account)
-	# 	return super(AccountLoginAPI, self).post(request, format='json')
+	permission_classes = (permissions.AllowAny, )
 
 
+	def post(self, request, format=None):
+		serializer = UserSerializerWithToken(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)	
