@@ -68,16 +68,18 @@ def current_user(request):
 	serializer = UserSerializer(request.user)
 	return Response(serializer.data)
 
-class AccountLoginAPI(KnoxLoginView):
-	
-	authentication_classes = [BasicAuthentication]
-	# permission_classes = (permissions.AllowAny, )
 
-	# def post(self, request, format=None):
-	# 	serializer = AuthTokenSerializer
-	# 	serialize.is_valid(raise_exception=True)
-	# 	account = serializer.validated_data['user']
-	# 	login(request, account)
-	# 	return super(AccountLoginAPI, self).post(request, format='json')
+class UserListJWT(APIView):
+	"""
+	Creating a user
+	"""
+
+	permission_classes = (permissions.AllowAny, )
 
 
+	def post(self, request, format=None):
+		serializer = UserSerializerWithToken(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)	
