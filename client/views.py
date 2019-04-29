@@ -55,14 +55,18 @@ class AccountCreateAPI(generics.GenericAPIView):
 # 					status=status.HTTP_201_CREATED
 # 					)
 # 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+User = get_user_model()
 
 
-from django.contrib.auth import login
-from rest_framework import permissions
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.views import LoginView as KnoxLoginView
-from rest_framework.authentication import BasicAuthentication
+@api_view(['GET'])
+def current_user(request):
+	"""
+	Determining the current user by their token
 
+	"""
+
+	serializer = UserSerializer(request.user)
+	return Response(serializer.data)
 
 class AccountLoginAPI(KnoxLoginView):
 	
