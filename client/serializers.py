@@ -25,9 +25,10 @@ class CreateAccountSerializer(serializers.ModelSerializer):
 		fields = ('id', 'username', 'email', 'password')	
 
 class AccountSerializer(serializers.ModelSerializer):
+
 	class Meta:
 		model = get_user_model()
-		fields = '__all__'		
+		fields = ('id','last_login','is_superuser','username','email','phone_number','is_active')		
 
 class LoginUserSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(
