@@ -73,8 +73,26 @@ class UserListJWT(APIView):
 	"""
 	Creating a user
 	"""
+class AccountLogoutAllView(APIView):
+	'''
+	Log the user out of all sessions 
+	I.E delete all auth tokens for the user
+	'''
 
-	permission_classes = (permissions.AllowAny, )
+	authentication_classes = (TokenAuthentication, )
+	permission_classes = ( permissions.IsAuthenticated, )
+
+
+	def post(self, request):
+		request.user.auth_token_set.all().delete()
+		user_logged_out.send(sender=request.user.__class__,
+							request=request, user=request.user)
+		return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+	
+	def get(self, request):
+		return Response({'status': 'No User'}, status=status.HTTP_200_OK)
+
 
 
 class AccountLogoutView(APIView):
