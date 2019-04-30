@@ -77,9 +77,12 @@ class UserListJWT(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 
+class AccountLogoutView(APIView):
+	authentication_classes = (TokenAuthentication, )
+	permission_classes = (permissions.IsAuthenticated,)
+
 	def post(self, request, format=None):
-		serializer = UserSerializerWithToken(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)	
+		request._auth.delete()
+		user_logged_out.send(sender=request.user.__class__,
+							request=request, user=request.user)
+		return Response(None, status=status.HTTP_204_NO_CONTENT) 
