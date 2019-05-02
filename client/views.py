@@ -1,26 +1,33 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import HttpResponseRedirect 
 from rest_framework import status, generics, mixins
 from client.serializers import *
 from django.contrib.auth import get_user_model	
-from rest_framework import permissions
+from rest_framework import permissions, reverse
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView
 from rest_framework.authentication import BasicAuthentication
 from knox.auth import TokenAuthentication
-from django.contrib.auth.signals import user_logged_out
+from django.contrib.auth.signals import user_logged_out, user_logged_in
 from django.utils import timezone
+from rest_framework.decorators import api_view
+from knox.settings import knox_settings
 
+current_format = None
 
 @api_view(['GET'])
-def current_user(request):
-	"""
-	Determining the current user by their token
-
-	"""
-
-	serializer = UserSerializer(request.user)
-	return Response(serializer.data)
+def api_root(request, format=current_format):
+	if request.user.is_authenticated:
+		data = {
+		'ooh':'your alive',
+		'user': AccountSerializer(request.user).data
+		}
+	else:
+		data = {
+		'error': 'You saw this. You Killed It'
+		}
+	return Response(data, status=status.HTTP_200_OK)
 
 
 class AccountCreateAPI(generics.GenericAPIView):
@@ -42,18 +49,35 @@ class AccountCreateAPI(generics.GenericAPIView):
 					)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+	def get(self, request, format=None):
+		print(request.user.is_active)
+		print()
+		return HttpResponseRedirect('/api/1.0')		
 
-class AccountLoginAPI(LoginView):
-	authentication_classes = [BasicAuthentication, ]
+
+class AccountLoginAPI(APIView):
+	authentication_classes = [BasicAuthentication,TokenAuthentication,  ]
+
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_context(self):
+		return {'request': self.request, 'format': self.format_kwarg, 'view': self}
+
+	def get_token_ttl(self):
+		return knox_settings.TOKEN_TTL
+
+	def get_token_limit_per_user(self):
+		return knox_settings.TOKEN_LIMIT_PER_USER			
 
 
-	def get(self, request, *args, **kwargs):
-		return Response(AccountSerializer(request.user).data)
+	
 
-	def post(self, request, format=None):
+	def post(self, request, format=None, *args, **kwargs):
 		token_limit_per_user = self.get_token_limit_per_user()
+		print(request.user)
 		if token_limit_per_user is not None:
 			now = timezone.now()
+			print(request.user)
 			token = request.user.auth_token_set.filter(expiry__gt=now)
 			if token.count() >= token_limit_per_user:
 				return Response(
@@ -70,7 +94,8 @@ class AccountLoginAPI(LoginView):
 
 		data = {
 			'expiry': instance.expiry,
-			'token': token
+			'token': token,
+			'limit': request.user.auth_token_set.filter(expiry__gt=now).count()
 		}
 
 		if UserSerializer is not None:
@@ -78,7 +103,19 @@ class AccountLoginAPI(LoginView):
 				request.user,
 				context=self.get_context()
 				).data
-		return Response(data)	
+		return Response(data)
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			data = {
+			'ooh':'your alive',
+			'user': AccountSerializer(request.user).data
+			}
+		else:
+			data = {
+			'error': 'You saw this.'
+			}
+		return Response(data, status=status.HTTP_200_OK)
 
 
 class AccountLogoutAllView(APIView):
@@ -88,7 +125,7 @@ class AccountLogoutAllView(APIView):
 	'''
 
 	authentication_classes = (TokenAuthentication, )
-	permission_classes = ( permissions.IsAuthenticated, )
+	# permission_classes = ( permissions.IsAuthenticated, )
 
 
 	def post(self, request):
@@ -98,18 +135,23 @@ class AccountLogoutAllView(APIView):
 		return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 	
-	def get(self, request):
-		return Response({'status': 'No User'}, status=status.HTTP_200_OK)
-
+	def get(self, request, format=None):
+		print(request.user.is_active)
+		print()
+		return HttpResponseRedirect('/api/1.0')
 
 
 class AccountLogoutView(APIView):
 	authentication_classes = (TokenAuthentication, )
-	permission_classes = (permissions.IsAuthenticated,)
+	# permission_classes = (permissions.IsAuthenticated, )
 
 	def post(self, request, format=None):
 		request._auth.delete()
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
-		return Response(None, status=status.HTTP_204_NO_CONTENT) 
+		return Response(None , status=status.HTTP_204_NO_CONTENT)
 
+	def get(self, request, format=None):
+		print(request.user.is_active)
+		print()
+		return HttpResponseRedirect('/api/1.0')
