@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'client',
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'knox',
     'corsheaders',
 ]
@@ -65,7 +65,7 @@ REST_KNOX = {
     'TOKEN_TLL':timedelta(hours=10),
     'USER_SERIALIZER':'client.serializers.AccountSerializer',
     'AUTO_REFRESH': False,
-    'TOKEN_LIMIT_PER_USER':3,
+    'TOKEN_LIMIT_PER_USER':None,
 
 }
 
