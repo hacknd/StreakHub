@@ -1,8 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from client import views
+from knox import views as knox_views
+
 
 urlpatterns = [
-	path('current_user/', views.current_user),
+	path('', views.api_root, name='root'),
 	path('auth/register/', views.AccountCreateAPI.as_view(), name='account-create'),
 	path('auth/login/', views.AccountLoginAPI.as_view(), name='account-login'),
 	path('auth/logout/',views.AccountLogoutView.as_view(), name='knox_logout'),
