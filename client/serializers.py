@@ -47,7 +47,7 @@ class LoginUserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ('username', 'password')	
+		fields = '__all__'	
 
 class AuthTokenSerializer(serializers.ModelSerializer):
 	class Meta:
