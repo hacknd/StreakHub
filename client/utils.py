@@ -1,8 +1,9 @@
-from .serializers import UserSerializer
+from rest_framework import exceptions
 
 
-def my_jwt_response_handler(token, user=None, request=None):
-	return {
-		'token': token,
-		'user': UserSerializer(user, context={'request': request.user}).data
-	}
+
+
+class GamEngineException400(exceptions.APIException):
+	status_code = 400
+	default_detail = 'This is a No No'
+	default_code = 'service_unavailable'
