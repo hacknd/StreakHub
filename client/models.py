@@ -32,6 +32,8 @@ class Role(models.Model):
 
 	id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True, default=ACCOUNT)
 
+	def save_role(self):
+		self.save()
 
 	def __str__(self):
 		return self.get_id_display()
