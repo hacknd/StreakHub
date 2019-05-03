@@ -77,12 +77,6 @@ class Member(models.Model):
 
 	def initialize_default_role(user):
 		for role_choice_id in [ 1, 2 ]:
-			if len(Role.objects.all()) < 2:
-				if len(Role.objects.filter(id__in=[ 1, 2])) < 2:
-					roleModel = Role.objects.create(id=role_choice_id)
-					roleModel.save()
-					user.roles.add(roleModel)
-			else:
 				roleModel = Role.objects.get(id=role_choice_id)
 				user.roles.add(roleModel)
 	class Meta:
