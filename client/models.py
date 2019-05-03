@@ -89,8 +89,8 @@ class Member(models.Model):
 
 	@receiver(pre_save, sender=get_user_model())
 	def create_roles(sender, instance, **kwargs):
-			for ids in [ 1, 2, 3, 4, 5, 6, 7 ]:
-				if Role.objects.count() >= 7:
+			for ids in range(0, Role.role_count(Role)+1):
+				if Role.objects.count() >= Role.role_count(Role):
 					pass
 				else:
 					role=Role.objects.create(id= ids)
