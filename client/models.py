@@ -90,6 +90,17 @@ class Member(models.Model):
 	def save_user(self):
 		self.save()
 
+
+
+	@receiver(pre_save, sender=get_user_model())
+	def create_roles(sender, instance, **kwargs):
+			for ids in [ 1, 2, 3, 4, 5, 6, 7 ]:
+				if Role.objects.count() >= 7:
+					pass
+				else:
+					role=Role.objects.create(id= ids)
+					role.save_role()
+
 	@receiver(post_save, sender=get_user_model())
 	def create_member_account(sender, instance, created, **kwargs):
 		if created:
