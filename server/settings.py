@@ -59,6 +59,8 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'client.utils.custom_exception_handler'
 }
 
+
+
 REST_KNOX = {
     'SECURE_HASH_ALGORITHM':'cryptography.hazmat.primitives.hashes.SHA512',
     'AUTH_TOKEN_CHARACTER_LENGTH':64,
