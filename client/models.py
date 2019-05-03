@@ -29,12 +29,13 @@ class Role(models.Model):
 		(ADVERT_ACCOUNT, 'advertisement_account'),
 		(VERIFIED_ACCOUNT, 'verified_account')
 	)
-
 	id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True, default=ACCOUNT)
 
 	def save_role(self):
 		self.save()
 
+	def role_count(self):
+		return len(self.ROLE_CHOICES)	
 	def __str__(self):
 		return self.get_id_display()
 
