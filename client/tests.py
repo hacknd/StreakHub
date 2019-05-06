@@ -262,7 +262,7 @@ class AccountLoginTest(APITestCase):
 
 
 
-	def test_authenticated_account_with_token_recognition_decides_to_logout(self):
+	def test_authenticated_account_with_token_recognition_decidestologoutforaspecificdevice(self):
 		"""
 		Ensuring the user in the system has token Authenticatian naa mean and log out once
 		"""	
