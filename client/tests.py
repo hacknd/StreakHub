@@ -181,6 +181,13 @@ class AccountsCreationTest(APITestCase):
 
 
 class AccountLoginTest(APITestCase):
+	def get_basic_auth_header(self,username, password):
+		return 'Token %s' % base64.b64encode(
+		('%s:%s' % (username, password)).encode('ascii')).decode()
+
+	def token_verification(self,auth_token):
+		token=auth_token.split('Token ')[1]
+		return token[:__import__('knox').settings.CONSTANTS.TOKEN_KEY_LENGTH]
 	def setUp(self):
 		# Originally creating a user from scratch to add up to users at the same time
 		self.test_user = Account.objects.create_user(username='testuser', email='test@example.com',password='testpassword',phone_number='+254715943570')
