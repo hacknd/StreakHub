@@ -93,7 +93,7 @@ class AccountLogoutAllView(APIView):
 
 class AccountLogoutView(APIView):
 	authentication_classes = (TokenAuthentication, )
-	# permission_classes = (permissions.IsAuthenticated, )
+	permission_classes = (permissions.IsAuthenticated, )
 
 	def post(self, request, format=None):
 		request._auth.delete()
