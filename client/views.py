@@ -31,7 +31,7 @@ def api_root(request, format=current_format):
 	return Response(data, status=status.HTTP_200_OK)
 
 
-class AccountCreateAPI(generics.GenericAPIView):
+class AccountCreateView(generics.GenericAPIView):
 	"""
 	Create an account from scratch
 	"""
@@ -56,7 +56,7 @@ class AccountCreateAPI(generics.GenericAPIView):
 		return HttpResponseRedirect('/api/1.0')		
 
 
-class AccountLoginAPI(LoginView):
+class AccountLoginView(LoginView):
 	permission_classes = (permissions.AllowAny, )
 
 	def post(self, request, format=None):
@@ -64,7 +64,7 @@ class AccountLoginAPI(LoginView):
 		serializer.is_valid(raise_exception=True)
 		account = serializer.validated_data['user']
 		login(request, account)
-		json = super(AccountLoginAPI, self).post(request, format=None)
+		json = super(AccountLoginView, self).post(request, format=None)
 		token = json.data["token"]
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
