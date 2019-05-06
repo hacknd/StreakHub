@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 from knox.views import LoginView
 from knox.auth import TokenAuthentication
 from knox.settings import knox_settings, CONSTANTS
-from client.serializers import CreateAccountSerializer,AccountSerializer,LoginUserSerializer
+from client.serializers import CreateAccountSerializer,AccountSerializer
 
 current_format = None
 
