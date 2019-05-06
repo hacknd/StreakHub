@@ -73,17 +73,17 @@ class AccountLogoutAllView(APIView):
 	permission_classes = ( permissions.IsAuthenticated, )
 
 
-	def post(self, request ,format=current_format):
+	def post(self, request ,format=current_format, *args, **kwargs):
 		request.user.auth_token_set.all().delete()
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
-		return Response(None, status=status.HTTP_204_NO_CONTENT)
+		return Response(None, status=status.HTTP_204_NO_CONTENT,*args,**kwargs)
 
 	
-	def get(self, request, format=current_format):
-		print(request.user.is_active)
-		print()
-		return HttpResponseRedirect('/api/1.0')
+	# def get(self, request, format=current_format, *args,**kwargs):
+	# 	print(request.user.is_active)
+	# 	print()
+	# 	return HttpResponseRedirect('/api/1.0',*args,**kwargs)
 
 
 class AccountLogoutView(APIView):
