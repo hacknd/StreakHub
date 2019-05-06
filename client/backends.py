@@ -27,7 +27,7 @@ class AuthBackend:
 			# Try to fetch the account by search the username or email field
 			account = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
 			if account.check_password(password):
-				print('AuthBackend Authentication in play.')
+				# print('AuthBackend Authentication in play.')
 				return account
 		except Account.DoesNotExist:
 			# Run the default password hasher once to reduce the timing
