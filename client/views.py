@@ -16,10 +16,13 @@ from client.serializers import CreateAccountSerializer,AccountSerializer
 current_format = None
 
 @api_view(['GET'])
-def api_root(request, format=current_format):
+def api_root(request, format=current_format, *args,**kwargs):
+	authentication_classes = (TokenAuthentication, )
+	permission_classes = ( permissions.IsAuthenticated, )
+
 	if request.user.is_authenticated:data = {'ooh':'your alive','user': AccountSerializer(request.user).data}
 	else:data = {'error': 'You saw this. You Killed It'}
-	return Response(data, status=status.HTTP_200_OK)
+	return Response(data, status=status.HTTP_200_OK, *args,**kwargs)
 
 
 class AccountCreateView(generics.GenericAPIView):
@@ -36,11 +39,11 @@ class AccountCreateView(generics.GenericAPIView):
 			if account:
 				json = AccountSerializer(account, context=self.get_serializer_context()).data
 				return Response(json,
-					status=status.HTTP_201_CREATED
+					status=status.HTTP_201_CREATED, *args,**kwargs
 					)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,*args,**kwargs)
 
-	def get(self, request, format=current_format):
+	def get(self, request, format=current_format,*args,**kwargs):
 		print(request.user.is_active)
 		print()
 		return HttpResponseRedirect('/api/1.0')		
@@ -91,13 +94,13 @@ class AccountLogoutView(APIView):
 	authentication_classes = (TokenAuthentication, )
 	permission_classes = (permissions.IsAuthenticated, )
 
-	def post(self, request, format=current_format):
+	def post(self, request, format=current_format, *args,**kwargs):
 		request._auth.delete()
 		user_logged_out.send(sender=request.user.__class__,
-							request=request, user=request.user)
-		return Response(None , status=status.HTTP_204_NO_CONTENT)
+							request=request, user=request.user, *args,**kwargs)
+		return Response(None , status=status.HTTP_204_NO_CONTENT, *args,**kwargs)
 
-	def get(self, request, format=current_format):
+	def get(self, request, format=current_format, *args,**kwargs):
 		print(request.user.is_active)
 		print()
-		return HttpResponseRedirect('/api/1.0')
+		return HttpResponseRedirect('/api/1.0', *args,**kwargs)
