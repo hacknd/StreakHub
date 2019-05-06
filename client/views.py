@@ -89,8 +89,9 @@ class AccountLoginAPI(LoginView):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.validated_data['user']
 		login(request, user)
-		return super(AccountLoginAPI, self).post(request, format=None)
-
+		json = super(AccountLoginAPI, self).post(request, format=None)
+		token = json.data["token"]
+		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
 class AccountLogoutAllView(APIView):
 	'''
