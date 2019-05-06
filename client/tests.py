@@ -198,6 +198,7 @@ class AccountLoginTest(APITestCase):
 		}	
 
 		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(response.data['user']['username'],data['username'])
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
 
@@ -205,15 +206,33 @@ class AccountLoginTest(APITestCase):
 		"""
 		Ensuring the user is in the system and does the activatian with email yaaa mean is a plan
 		"""	
+		account = Account.objects.latest('id')
 		data = {
 			'username':'test@example.com',
 			'password':'testpassword',
 		}
 
 		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(response.data['user']['email'],data['username'])
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
 
+
+	def test_authenticate_account_with_phone_number(self):
+		"""
+		Ensuring the user is in system and does the activatian with phwone namba yaaa mean
+		"""	
+		account = Account.objects.latest('id')
+
+		data = {
+			'username':'+254715943570',
+			'password':'testpassword',
+		}
+
+		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(response.data['user']['phone_number'], data['username'])
+		self.assertTrue(account.check_password(data['password']))
+		self.assertEqual(Account.objects.count(), 1)
 
 
 
