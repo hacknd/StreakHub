@@ -253,7 +253,7 @@ class AccountLoginTest(APITestCase):
 		}
 
 		response = self.client.post(self.create_url, data, format='json')
-		self.client.credentials(HTTP_AUTHORIZATION=self.get_basic_auth_header(response.data['user']['username'],data['password']))
+		self.client.credentials(HTTP_AUTHORIZATION=response['Authorization'])
 		self.assertEqual(AuthToken.objects.count(), 1)
 		self.assertEqual(self.token_verification(response['Authorization']), AuthToken.objects.latest('user_id').token_key)
 		self.assertEqual(1,1)
