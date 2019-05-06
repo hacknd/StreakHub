@@ -85,6 +85,10 @@ class AccountLogoutAllView(APIView):
 
 
 class AccountLogoutView(APIView):
+	"""
+	Logging out a single device 
+	closing a single sessions
+	"""
 	authentication_classes = (TokenAuthentication, )
 	permission_classes = (permissions.IsAuthenticated, )
 
