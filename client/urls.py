@@ -1,7 +1,6 @@
 from django.urls import path, include
 from client import views
 
-
 urlpatterns = [
 	path('', views.api_root, name='root'),
 	path('auth/register/', views.AccountCreateView.as_view(), name='account-create'),
