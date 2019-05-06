@@ -277,10 +277,33 @@ class AccountLoginTest(APITestCase):
 		response = self.client.post(self.create_url, data, format='json')
 		self.assertEqual(AuthToken.objects.count(), 1)
 		self.assertEqual(self.token_verification(response['Authorization']), AuthToken.objects.latest('user_id').token_key)
-		self.assertEqual(1,1)
 		self.client.post(self.create_url, data, format='json')
 		self.assertTrue(all(e.token_key for e in AuthToken.objects.all()))
 		url = reverse('account-logout')
 		self.client.credentials(HTTP_AUTHORIZATION=response['Authorization'])
 		self.client.post(url, {}, format='json')
-		self.assertEqual(AuthToken.objects.count(), 0, 'other tokens should remain after logout')
+		self.assertEqual(AuthToken.objects.count(), 1, 'other tokens should remain after logout')
+
+		
+	def test_authenticated_account_with_token_recognition_decidestologoutforalldevices(self):
+		"""
+		Ensuring the user in the system has token Authenticatian naa mean and log out once
+		"""	
+		self.assertEqual(AuthToken.objects.count(), 0)
+		account = Account.objects.latest('id')
+
+		data = {
+			'username':'test@example.com',
+			'password':'testpassword',
+		}
+
+		response = self.client.post(self.create_url, data, format='json')
+		self.assertEqual(AuthToken.objects.count(), 1)
+		self.assertEqual(self.token_verification(response['Authorization']), AuthToken.objects.latest('user_id').token_key)
+		self.client.post(self.create_url, data, format='json')
+		self.assertTrue(all(e.token_key for e in AuthToken.objects.all()))
+		url = reverse('account-logoutall')
+		self.client.credentials(HTTP_AUTHORIZATION=response['Authorization'])
+		self.client.post(url, {}, format='json')
+		self.assertEqual(AuthToken.objects.count(), 0, 'everyone instance of the user does not get the authentication access')
+	
