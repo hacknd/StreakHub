@@ -30,23 +30,6 @@ class AccountSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = ('id','last_login','is_superuser','username','email','phone_number','is_active')		
 
-class LoginUserSerializer(serializers.ModelSerializer):
-	username = serializers.CharField(
-		required=True,
-		)	
-	password = serializers.CharField(
-		min_length=8,
-		write_only=True
-		)		
-
-	def validate(self , data):
-		account = authenticate(username=data['username'], password=data['password'])
-		if account and account.is_active:
-			return account
-		raise serializers.ValidationError("Ooops! Wrong credentials, try again?")	
-
-	class Meta:
-		model = get_user_model()
-		fields = '__all__'	
+	
 
 
