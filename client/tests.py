@@ -73,10 +73,7 @@ class AccountsCreationTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		# Additionally, we want to return the username and email successful creation
 		self.assertEqual(response.data['username'], data['username'])
-		self.assertEqual(response.data['email'], data['email'])
-		token = Token.objects.get(user=user)
-		print(response.data['token'])
-		self.assertEqual(response.data['token'].username, Token)
+		self.assertEqual(response.data['email'], data['email'])	
 
 	
 	def test_create_account_with_short_password(self):
