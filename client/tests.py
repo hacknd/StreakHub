@@ -4,8 +4,9 @@ from client.models import Member
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
+import base64
 # from rest_framework.authtoken.models import Token
-from knox.models import AuthToken as Token
+from knox.models import AuthToken
 Account = get_user_model()
 
 # Create your tests here.
