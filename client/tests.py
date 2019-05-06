@@ -243,6 +243,26 @@ class AccountLoginTest(APITestCase):
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
 
+	def test_authenticate_account_with_token_recognition(self):
+		"""
+		Ensuring the user in the system has token Authenticatian naa mean
+		"""	
+		self.assertEqual(AuthToken.objects.count(), 0)
+		account = Account.objects.latest('id')
+
+		data = {
+			'username':'test@example.com',
+			'password':'testpassword',
+		}
+
+		response = self.client.post(self.create_url, data, format='json')
+		self.client.credentials(HTTP_AUTHORIZATION=self.get_basic_auth_header(response.data['user']['username'],data['password']))
+		self.assertEqual(AuthToken.objects.count(), 1)
+		self.assertEqual(self.token_verification(response['Authorization']), AuthToken.objects.latest('user_id').token_key)
+		self.assertEqual(1,1)
+		self.assertTrue(all(e.token_key for e in AuthToken.objects.all()))
+
+
 
 
 		
