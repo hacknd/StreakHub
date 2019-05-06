@@ -66,9 +66,8 @@ class AccountLogoutAllView(APIView):
 	Log the user out of all sessions 
 	I.E delete all auth tokens for the user
 	'''
-
 	authentication_classes = (TokenAuthentication, )
-	# permission_classes = ( permissions.IsAuthenticated, )
+	permission_classes = ( permissions.IsAuthenticated, )
 
 
 	def post(self, request ,format=current_format):
