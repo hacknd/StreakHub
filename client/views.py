@@ -1,33 +1,24 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.http import HttpResponseRedirect 
-from rest_framework import status, generics, mixins
-from client.serializers import *
-from django.contrib.auth import get_user_model,login	
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework import permissions, reverse
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.views import LoginView
-from rest_framework.authentication import BasicAuthentication
-from knox.auth import TokenAuthentication
 from django.contrib.auth.signals import user_logged_out, user_logged_in
+from django.http import HttpResponseRedirect 
+from django.contrib.auth import get_user_model,login	
 from django.utils import timezone
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status, generics, mixins, permissions, reverse
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import api_view
+from knox.views import LoginView
+from knox.auth import TokenAuthentication
 from knox.settings import knox_settings, CONSTANTS
+from client.serializers import CreateAccountSerializer,AccountSerializer,LoginUserSerializer
 
 current_format = None
 
 @api_view(['GET'])
 def api_root(request, format=current_format):
-	if request.user.is_authenticated:
-		data = {
-		'ooh':'your alive',
-		'user': AccountSerializer(request.user).data
-		}
-	else:
-		data = {
-		'error': 'You saw this. You Killed It'
-		}
+	if request.user.is_authenticated:data = {'ooh':'your alive','user': AccountSerializer(request.user).data}
+	else:data = {'error': 'You saw this. You Killed It'}
 	return Response(data, status=status.HTTP_200_OK)
 
 
@@ -37,7 +28,6 @@ class AccountCreateView(generics.GenericAPIView):
 	"""
 	queryset=get_user_model().objects.all()
 	serializer_class=CreateAccountSerializer
-
 
 	def post(self, request, *args, **kwargs):
 		serializer = self.get_serializer(data=request.data)
@@ -50,7 +40,7 @@ class AccountCreateView(generics.GenericAPIView):
 					)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	def get(self, request, format=None):
+	def get(self, request, format=current_format):
 		print(request.user.is_active)
 		print()
 		return HttpResponseRedirect('/api/1.0')		
@@ -59,12 +49,12 @@ class AccountCreateView(generics.GenericAPIView):
 class AccountLoginView(LoginView):
 	permission_classes = (permissions.AllowAny, )
 
-	def post(self, request, format=None):
+	def post(self, request, format=current_format):
 		serializer=AuthTokenSerializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		account = serializer.validated_data['user']
 		login(request, account)
-		json = super(AccountLoginView, self).post(request, format=None)
+		json = super(AccountLoginView, self).post(request, format=current_format)
 		token = json.data["token"]
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
@@ -78,14 +68,14 @@ class AccountLogoutAllView(APIView):
 	# permission_classes = ( permissions.IsAuthenticated, )
 
 
-	def post(self, request):
+	def post(self, request ,format=current_format):
 		request.user.auth_token_set.all().delete()
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
 		return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 	
-	def get(self, request, format=None):
+	def get(self, request, format=current_format):
 		print(request.user.is_active)
 		print()
 		return HttpResponseRedirect('/api/1.0')
@@ -95,13 +85,13 @@ class AccountLogoutView(APIView):
 	authentication_classes = (TokenAuthentication, )
 	permission_classes = (permissions.IsAuthenticated, )
 
-	def post(self, request, format=None):
+	def post(self, request, format=current_format):
 		request._auth.delete()
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
 		return Response(None , status=status.HTTP_204_NO_CONTENT)
 
-	def get(self, request, format=None):
+	def get(self, request, format=current_format):
 		print(request.user.is_active)
 		print()
 		return HttpResponseRedirect('/api/1.0')
