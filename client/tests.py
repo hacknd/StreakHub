@@ -278,6 +278,7 @@ class AccountLoginTest(APITestCase):
 		self.assertEqual(AuthToken.objects.count(), 1)
 		self.assertEqual(self.token_verification(response['Authorization']), AuthToken.objects.latest('user_id').token_key)
 		self.assertEqual(1,1)
+		self.client.post(self.create_url, data, format='json')
 		self.assertTrue(all(e.token_key for e in AuthToken.objects.all()))
 		url = reverse('account-logout')
 		self.client.credentials(HTTP_AUTHORIZATION=response['Authorization'])
