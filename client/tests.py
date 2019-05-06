@@ -181,9 +181,6 @@ class AccountsCreationTest(APITestCase):
 
 
 class AccountLoginTest(APITestCase):
-	def get_basic_auth_header(self,username, password):
-		return 'Token %s' % base64.b64encode(
-		('%s:%s' % (username, password)).encode('ascii')).decode()
 
 	def token_verification(self,auth_token):
 		token=auth_token.split('Token ')[1]
