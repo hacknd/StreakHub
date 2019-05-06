@@ -41,7 +41,7 @@ class AuthBackend:
 	def get_user(self, user_id):
 		try:
 			account = Account.objects.get(pk=user_id)
-			print('AuthBackend Authentication in play.')
+			# print('AuthBackend Authentication in play.')
 		except Account.DoesNotExist:
 			return None
 		return account if self.user_can_authenticate(account) else None 			
