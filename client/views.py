@@ -25,32 +25,7 @@ def api_root(request, format=current_format):
 		'user': AccountSerializer(request.user).data
 		}
 	else:
-		# print(__import__('ipaddr').client_ip(request))
-		# try:
-		# 	real_ip = request.META['HTTP_X_FORWARDED_FOR']
-		# 	print(real_ip)
-		# 	regip = real_ip.split(",")[0]
-		# except:
-		# 	try:
-		# 		regip = request.META['REMOTE_ADDR']
-		# 	except:
-		# 		regip = ""
-		# print(regip)
-		# if(regip == "127.0.0.1"):
-		# 	myHost=__import__('socket').gethostname()
-		# else:
-		# 	resultHost = __import__('socket').gethostbyaddr(regip)
-		# 	myHost=resultHost[0]
-		# print(myHost)	
-		if 'HTTP_X_FORWARDED_FOR' in request.META:
-			print('yessss')
-		else:
-			print('damn')	
-		import ipware as ip
-		print(dir(ip))
-		print(ip.get_client_ip(request))			
 		data = {
-		'ip':request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[-1].strip(),
 		'error': 'You saw this. You Killed It'
 		}
 	return Response(data, status=status.HTTP_200_OK)
