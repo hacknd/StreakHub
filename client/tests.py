@@ -183,7 +183,6 @@ class AccountLoginTest(APITestCase):
 	def setUp(self):
 		# Originally creating a user from scratch to add up to users at the same time
 		self.test_user = Account.objects.create_user(username='testuser', email='test@example.com',password='testpassword',phone_number='+254715943570')
-		self.token_test_user = Token.objects.create(user=self.test_user)[1]
 		#Url for creating an account
 		self.create_url = reverse('account-login')
 
@@ -193,16 +192,12 @@ class AccountLoginTest(APITestCase):
 		Ensuring the user is in the system and does the spot yaamean I was listening to reggae writing affi man
 		"""	
 		account = Account.objects.latest('id')
-		token = Token.objects.create(account)[1]
 		data = {
 		'username':'testuser',
 		'password':'testpassword',
-		'token': token
 		}	
 
 		response = self.client.post(self.create_url, data, format='json')
-		self.assertEqual(response.data['token'], self.token_test_user.key)
-		self.assertEqual(response.data['username'],data['username'])
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
 
@@ -213,11 +208,9 @@ class AccountLoginTest(APITestCase):
 		data = {
 			'username':'test@example.com',
 			'password':'testpassword',
-			'token':self.token_test_user,
 		}
 
 		response = self.client.post(self.create_url, data, format='json')
-		self.assertEqual(response.data['token'], self.token_test_user.key)
 		self.assertEqual(response.data['email'],data['username'])
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
