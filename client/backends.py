@@ -6,13 +6,12 @@ from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as __
 from .utils import GamEngineException400
 from rest_framework import exceptions
-from knox.auth import TokenAuthentication
 Account = get_user_model()
 
 
 
 
-class AuthBackend:
+class AuthBackend(authentication.TokenAuthentication):
 	"""
 	Authentication......starts....now
 	"""
