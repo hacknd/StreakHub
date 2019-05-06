@@ -10,12 +10,10 @@ class CustomAccountManager(BaseUserManager):
 		'''
 		Create and save an individual account with the given email and password
 		'''
-
 		if extra_fields.get('is_superuser') is True:
 			if email == '':
 				pass
 			account = self.model(username=username, **extra_fields)
-			# print(email)
 			account.set_password(password)
 			account.save()
 			return account
