@@ -62,8 +62,8 @@ class AccountLoginAPI(LoginView):
 	def post(self, request, format=None):
 		serializer=AuthTokenSerializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
-		user = serializer.validated_data['user']
-		login(request, user)
+		account = serializer.validated_data['user']
+		login(request, account)
 		json = super(AccountLoginAPI, self).post(request, format=None)
 		token = json.data["token"]
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
