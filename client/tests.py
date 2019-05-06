@@ -211,7 +211,6 @@ class AccountLoginTest(APITestCase):
 		}
 
 		response = self.client.post(self.create_url, data, format='json')
-		self.assertEqual(response.data['email'],data['username'])
 		self.assertTrue(account.check_password(data['password']))
 		self.assertEqual(Account.objects.count(), 1)
 
