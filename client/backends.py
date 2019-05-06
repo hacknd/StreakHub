@@ -19,18 +19,23 @@ class AuthBackend(authentication.TokenAuthentication):
 		if username is None:
 			username = kwargs.get(Account.USERNAME_FIELD)
 		try:
-			# If this is an email which is blank, he or she is unable to get in with a blakn username.
+			"""
+			 If this is an email which is blank, he or she is unable to get in with a blakn username.
+			"""
 			if username == '':
 				msg=__('Not permitted to do this request.')
 				raise GamEngineException400(msg)
-			# Try to fetch the account by search the username or email field
+			"""
+			Try to fetch the account by search the username or email field
+			"""
 			account = Account.objects.get(Q(username=username)|Q(email=username)|Q(phone_number=username))
 			if account.check_password(password):
-				# print('AuthBackend Authentication in play.')
 				return account
 		except Account.DoesNotExist:
-			# Run the default password hasher once to reduce the timing
-			# difference between an existign and a non existing existing user
+			"""
+			 Run the default password hasher once to reduce the timing
+			 difference between an existign and a non existing existing user
+			"""
 			return None
 
 		else:
@@ -40,7 +45,6 @@ class AuthBackend(authentication.TokenAuthentication):
 	def get_user(self, user_id):
 		try:
 			account = Account.objects.get(pk=user_id)
-			# print('AuthBackend Authentication in play.')
 		except Account.DoesNotExist:
 			return None
 		return account if self.user_can_authenticate(account) else None 			
