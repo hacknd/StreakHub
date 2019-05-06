@@ -46,13 +46,18 @@ class Account(AbstractUser):
 	phone_regex= RegexValidator(regex=r'^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3})|(\(?\d{2,3}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 	phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
 	is_phone_active = models.BooleanField(default=False) # Activating the phone number to be of use.
-	
+	account_membership_id = models.CharField(max_length=10, unique=True)
 
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = []
 
 	objects = CustomAccountManager()
+
+	@receiver(post_save, sender='client.Member')
+	def account_membership_id(sender, instance, created, **kwargs):
+		if created:
+			pass
 
 	def __str__(self):
 		return self.username
