@@ -49,10 +49,4 @@ class LoginUserSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = '__all__'	
 
-class AuthTokenSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = AuthToken
-		fields = ('token')
-
-
 
