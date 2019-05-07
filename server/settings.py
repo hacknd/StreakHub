@@ -49,17 +49,6 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-REST_FRAMEWORK = {
-
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'client.backends.AuthBackend',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'knox.auth.TokenAuthentication',
-        ), 
-    # 'EXCEPTION_HANDLER': 'client.utils.custom_exception_handler'
-}
-
-
 
 REST_KNOX = {
     'SECURE_HASH_ALGORITHM':'cryptography.hazmat.primitives.hashes.SHA512',
