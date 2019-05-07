@@ -135,7 +135,6 @@ class Blog(models.Model):
 	def __str__(self):
 		return self.names	
 
-
 class Post(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
@@ -153,6 +152,7 @@ class Community(models.Model):
 
 	def __str__(self):
 		return self.name	
+
 class Tournament(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
@@ -161,6 +161,7 @@ class Tournament(models.Model):
 
 	def __str__(self):
 		return self.names	
+
 class Bookmarks(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
@@ -178,6 +179,7 @@ class Following(models.Model):
 
 	def __str__(self):
 		return self.names
+
 class Followers(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
