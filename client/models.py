@@ -109,15 +109,12 @@ class Member(models.Model):
 				Member.objects.create(user=instance, username=instance.username, email=instance.email, phone_number=instance.phone_number)
 				Member.initialize_default_role(Member.objects.get(user=instance))
 		
-
 	@receiver(post_save, sender=get_user_model())
 	def save_member_account(sender, instance, **kwargs):
 		instance.user_members.save()
 		
 	def __str__(self):
 		return self.user.username 
-
-
 
 class RegistrationAudit(models.Model):
 	user_id=models.CharField(max_length=300,unique=True, default='1')
@@ -127,8 +124,6 @@ class RegistrationAudit(models.Model):
 	
 	class Meta:
 		verbose_name_plural = 'RegistrationAudits'
-
-
 
 
 class Blog(models.Model):
