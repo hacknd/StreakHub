@@ -20,7 +20,6 @@ class Role(models.Model):
 	ADVERT_ACCOUNT = 6
 	VERIFIED_ACCOUNT = 7
 
-
 	ROLE_CHOICES = (
 		(ACCOUNT, 'member'),
 		(INDIVIDUAL_ACCOUNT, 'individual_account'),
