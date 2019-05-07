@@ -90,8 +90,6 @@ class Member(models.Model):
 	def save_user(self):
 		self.save()
 
-
-
 	@receiver(pre_save, sender=get_user_model())
 	def create_roles(sender, instance, **kwargs):
 			for ids in range(0, Role.role_count(Role)+1):
