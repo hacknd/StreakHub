@@ -162,6 +162,8 @@ SOCIAL_AUTH_PIPELINE=(
     'social_core.pipeline.user.user_details',
     )
 AUTHENTICATION_BACKENDS = (
+    #Google OAuth2 Authentication
+    'social_core.backends.google.GoogleOAuth2',
     'client.backends.AuthBackend',
     'django.contrib.auth.backends.ModelBackend',
     )
