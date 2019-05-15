@@ -20,5 +20,6 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/1.0/', include('client.urls')),
-]
+    path('', include('client.urls')),
+    path('api/login/social/knox/',__import__('client').views.AccountSocialLoginView.as_view()),
+    ]
