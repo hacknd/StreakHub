@@ -161,13 +161,20 @@ SOCIAL_AUTH_PIPELINE=(
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
     )
+
 #Google Credentials here
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 AUTHENTICATION_BACKENDS = (
     #Google OAuth2 Authentication
     'social_core.backends.google.GoogleOAuth2',
+    #Discord OAuth2 Authentication
+    'social_core.backends.discord.DiscordOAuth2',
+    #Twitch OAuth2 Authentication
+    'social_core.backends.twitch.TwitchOAuth2',
+    # Custom Authentication Formula
     'client.backends.AuthBackend',
+    # Default if custom is not working
     'django.contrib.auth.backends.ModelBackend',
     )
 
