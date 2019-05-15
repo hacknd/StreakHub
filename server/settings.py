@@ -58,7 +58,6 @@ REST_KNOX = {
     'USER_SERIALIZER':'client.serializers.AccountSerializer',
     'AUTO_REFRESH': False,
     'TOKEN_LIMIT_PER_USER':None,
-
 }
 
 CORS_ORIGIN_WHITELIST = (
@@ -150,6 +149,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 SOCIAL_AUTH_PIPELINE=(
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -165,6 +165,7 @@ SOCIAL_AUTH_PIPELINE=(
 #Google Credentials here
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
 #Discord Credentials here
 SOCIAL_AUTH_DISCORD_KEY=config('SOCIAL_AUTH_DISCORD_KEY')
 SOCIAL_AUTH_DISCORD_SECRET=config('SOCIAL_AUTH_DISCORD_SECRET')
@@ -172,6 +173,7 @@ SOCIAL_AUTH_DISCORD_SECRET=config('SOCIAL_AUTH_DISCORD_SECRET')
 #Twitch credentials here
 SOCIAL_AUTH_TWITCH_KEY=config('SOCIAL_AUTH_TWITCH_KEY')
 SOCIAL_AUTH_TWITCH_SECRET=config('SOCIAL_AUTH_TWITCH_SECRET')
+
 AUTHENTICATION_BACKENDS = (
     #Google OAuth2 Authentication
     'social_core.backends.google.GoogleOAuth2',
@@ -184,6 +186,7 @@ AUTHENTICATION_BACKENDS = (
     # Default if custom is not working
     'django.contrib.auth.backends.ModelBackend',
     )
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -203,3 +206,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
