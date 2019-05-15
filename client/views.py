@@ -64,6 +64,19 @@ class AccountLoginView(LoginView):
 		token = json.data["token"]
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
+class AccountSocialLoginView(SocialKnoxUserAuthView):
+	serializer_class = SocialSerializer
+
+	def post(self, request, format=current_format):
+		json = super(AccountSocialLoginView, self).post(request, format=current_format)
+		token = __import__('knox').models.AuthToken.objects.get(token_key=json.data['token'][:__import__('knox').settings.CONSTANTS.TOKEN_KEY_LENGTH])
+
+		data = {
+			"token":json.data['token'],
+			"expiry":token.expiry
+		}
+		data["user"] = json.data
+		return Response(data, status=status.HTTP_201_CREATED)
 class AccountLogoutAllView(APIView):
 	'''
 	Log the user out of all sessions 
