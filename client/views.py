@@ -79,6 +79,8 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 		}
 		data["user"] = json.data
 		return Response(data, status=status.HTTP_201_CREATED)
+
+
 class AccountLogoutAllView(APIView):
 	'''
 	Log the user out of all sessions 
