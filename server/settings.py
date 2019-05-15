@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'knox',
     'corsheaders',
+    'social_django',
+    'rest_social_auth',
 ]
 
 REST_KNOX = {
