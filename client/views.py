@@ -46,8 +46,6 @@ class AccountCreateView(generics.GenericAPIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,*args,**kwargs)
 
 	def get(self, request, format=current_format,*args,**kwargs):
-		print(request.user.is_active)
-		print()
 		return HttpResponseRedirect('/api/1.0')		
 
 class AccountLoginView(LoginView):
@@ -124,6 +122,4 @@ class AccountLogoutView(APIView):
 		return Response(None , status=status.HTTP_204_NO_CONTENT, *args,**kwargs)
 
 	def get(self, request, format=current_format, *args,**kwargs):
-		print(request.user.is_active)
-		print()
 		return HttpResponseRedirect('/api/1.0', *args,**kwargs)
