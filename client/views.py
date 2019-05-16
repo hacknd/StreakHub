@@ -91,6 +91,7 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 			"expiry":token.expiry
 		}
 		data["user"] = json.data
+		login(request, token.user, backend='client.backends.AuthBackend')
 		return Response(data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(json.data['token'])})
 
 class AccountLogoutAllView(APIView):
