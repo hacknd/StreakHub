@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'rest_social_auth',
+    'django.contrib.sites'
 ]
 
 REST_KNOX = {
@@ -207,3 +208,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+SITE_ID=2
