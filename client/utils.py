@@ -1,4 +1,3 @@
-from rest_framework import exceptions
 from rest_framework import exceptions, status
 from social_core.backends.utils import get_backend
 from server.settings import AUTHENTICATION_BACKENDS
@@ -7,21 +6,15 @@ from django.contrib.sites.models import Site
 from decouple import config
 from django.utils.translation import ugettext_lazy as __
 from django.shortcuts import redirect
+class GamEngineException(exceptions.APIException):
+	"""
+	Exceptions Area
 
-class GamEngineException400(exceptions.APIException):
-	status_code = 400
-	default_detail = 'This is a No No'
+
+	ERROR Places
+	"""
+	default_detail = 'Missing Information'
 	default_code = 'service_unavailable'
-
-class GamEngineException404(exceptions.APIException):
-	status_code = 404
-	default_detail="We couldn't find your request"
-	default_code="Error in Viewing"
-
-class GamEngineException500(exceptions.APIException):
-	status_code = 500
-	default_detail="Error in system functionality"
-	default_code="Error in System"	
 
 def GamEngineRedirectAuthorizationBackend(backend, code):
 		"""
