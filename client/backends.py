@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission
 from rest_framework import authentication, exceptions, status
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as __
-from .utils import GamEngineException400
+from .utils import GamEngineException
 from rest_framework import exceptions
 Account = get_user_model()
 
@@ -24,7 +24,7 @@ class AuthBackend(authentication.TokenAuthentication):
 			"""
 			if username == '':
 				msg=__('Not permitted to do this request.')
-				raise GamEngineException400(msg)
+				raise GamEngineException(code=status.HTTP_400_BAD_REQUEST,detail=msg)
 			"""
 			Try to fetch the account by search the username or email field
 			"""
