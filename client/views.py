@@ -13,7 +13,7 @@ from knox.auth import TokenAuthentication
 from knox.settings import knox_settings, CONSTANTS
 from client.serializers import CreateAccountSerializer,AccountSerializer,SocialSerializer
 from rest_social_auth.views import SocialKnoxUserAuthView
-
+from client.utils import GamEngineRedirectAuthorizationBackend
 
 current_format = None
 
@@ -69,7 +69,18 @@ class AccountLoginView(LoginView):
 class AccountSocialLoginView(SocialKnoxUserAuthView):
 	serializer_class = SocialSerializer
 
-	def post(self, request, format=current_format):
+	def get(self, request, provider,code=None, format=current_format,*args, **kwargs):
+		# print(request.backend)
+		try:
+			code=request.GET['code']
+			data = GamEngineRedirectAuthorizationBackend(provider, code)
+			
+		except KeyError:
+			return GamEngineRedirectAuthorizationBackend(provider, code)
+		(request.data).update(data)
+		return self.post(request, format=current_format,*args,**kwargs)
+	
+	def post(self, request, format=current_format, *args, **kwargs):
 		json = super(AccountSocialLoginView, self).post(request, format=current_format)
 		token = __import__('knox').models.AuthToken.objects.get(token_key=json.data['token'][:__import__('knox').settings.CONSTANTS.TOKEN_KEY_LENGTH])
 
