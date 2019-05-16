@@ -1,4 +1,12 @@
 from rest_framework import exceptions
+from rest_framework import exceptions, status
+from social_core.backends.utils import get_backend
+from server.settings import AUTHENTICATION_BACKENDS
+from rest_framework.reverse import reverse
+from django.contrib.sites.models import Site
+from decouple import config
+from django.utils.translation import ugettext_lazy as __
+from django.shortcuts import redirect
 
 class GamEngineException400(exceptions.APIException):
 	status_code = 400
