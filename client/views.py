@@ -50,7 +50,6 @@ class AccountCreateView(generics.GenericAPIView):
 		print()
 		return HttpResponseRedirect('/api/1.0')		
 
-
 class AccountLoginView(LoginView):
 	"""
 	Logging in a user that verification is required and a authorization header is created in the django api side
@@ -94,7 +93,6 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 		data["user"] = json.data
 		return Response(data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(json.data['token'])})
 
-
 class AccountLogoutAllView(APIView):
 	'''
 	Log the user out of all sessions 
@@ -109,13 +107,6 @@ class AccountLogoutAllView(APIView):
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
 		return Response(None, status=status.HTTP_204_NO_CONTENT,*args,**kwargs)
-
-	
-	# def get(self, request, format=current_format, *args,**kwargs):
-	# 	print(request.user.is_active)
-	# 	print()
-	# 	return HttpResponseRedirect('/api/1.0',*args,**kwargs)
-
 
 class AccountLogoutView(APIView):
 	"""
