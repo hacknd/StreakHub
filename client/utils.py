@@ -31,7 +31,6 @@ def GamEngineRedirectAuthorizationBackend(backend, code):
 					'client_id':config('SOCIAL_AUTH_'+backend.upper().replace('-','_')+'_KEY')
 				}
 				final_url=authorization_url+'?'+__import__('urllib').parse.urlencode(url_parameters)
-				print(final_url)
 			except:
 				raise GamEngineException(code=status.HTTP_501_NOT_IMPLEMENTED,detail=__('Missing Backend'))
 			
