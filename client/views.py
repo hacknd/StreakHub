@@ -73,8 +73,7 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 		# print(request.backend)
 		try:
 			code=request.GET['code']
-			data = GamEngineRedirectAuthorizationBackend(provider, code)
-			
+			data = GamEngineRedirectAuthorizationBackend(provider, code)	
 		except KeyError:
 			return GamEngineRedirectAuthorizationBackend(provider, code)
 		(request.data).update(data)
@@ -83,7 +82,6 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 	def post(self, request, format=current_format, *args, **kwargs):
 		json = super(AccountSocialLoginView, self).post(request, format=current_format)
 		token = __import__('knox').models.AuthToken.objects.get(token_key=json.data['token'][:__import__('knox').settings.CONSTANTS.TOKEN_KEY_LENGTH])
-
 		data = {
 			"token":json.data['token'],
 			"expiry":token.expiry
@@ -99,7 +97,6 @@ class AccountLogoutAllView(APIView):
 	'''
 	authentication_classes = (TokenAuthentication, )
 	permission_classes = ( permissions.IsAuthenticated, )
-
 
 	def post(self, request ,format=current_format, *args, **kwargs):
 		request.user.auth_token_set.all().delete()
