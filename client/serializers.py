@@ -31,7 +31,7 @@ class AccountSerializer(serializers.ModelSerializer):
 		fields = ('id','last_login','is_superuser','username','email','phone_number','is_active')		
 
 class SocialSerializer(UserKnoxSerializer):
-	def get_token(sefl, obj):
+	def get_token(self, obj):
 		
 		from knox.models import AuthToken
 		from knox.settings import knox_settings
