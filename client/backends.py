@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, backends
 from django.db.models import Q
 from django.contrib.auth.models import Permission
 from rest_framework import authentication, exceptions, status
@@ -11,7 +11,7 @@ Account = get_user_model()
 
 
 
-class AuthBackend(authentication.TokenAuthentication):
+class AuthBackend(backends.ModelBackend):
 	"""
 	Authentication......starts....now
 	"""
