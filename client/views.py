@@ -67,6 +67,9 @@ class AccountLoginView(LoginView):
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
 class AccountSocialLoginView(SocialKnoxUserAuthView):
+	"""
+	Logging in a user that social verification is required and a authorization header is created in the django api side 
+	"""
 	serializer_class = SocialSerializer
 
 	def get(self, request, provider,code=None, format=current_format,*args, **kwargs):
