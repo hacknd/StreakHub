@@ -6,6 +6,8 @@ from django.contrib.sites.models import Site
 from decouple import config
 from django.utils.translation import ugettext_lazy as __
 from django.shortcuts import redirect
+import urllib
+
 class GamEngineException(exceptions.APIException):
 	"""
 	Exceptions Area
@@ -30,7 +32,7 @@ def GamEngineRedirectAuthorizationBackend(backend, code):
 					'scope':[scope for scope in backend_class.DEFAULT_SCOPE if scope != 'openid'][0],
 					'client_id':config('SOCIAL_AUTH_'+backend.upper().replace('-','_')+'_KEY')
 				}
-				final_url=authorization_url+'?'+__import__('urllib').parse.urlencode(url_parameters)
+				final_url=authorization_url+'?'+urllib.parse.urlencode(url_parameters)
 			except:
 				raise GamEngineException(code=status.HTTP_501_NOT_IMPLEMENTED,detail=__('Missing Backend'))
 			
