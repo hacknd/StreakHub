@@ -4,3 +4,4 @@ game
 *db.sqlite3
 *__pycache__/
 .env
+virtual
