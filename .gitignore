@@ -5,3 +5,4 @@ game
 *__pycache__/
 .env
 virtual
+.idea
