@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model, authenticate, login
 from knox.models import AuthToken
-
+from rest_social_auth.serializers import UserKnoxSerializer
 class CreateAccountSerializer(serializers.ModelSerializer):
 	email = serializers.EmailField(
 		required=True,
@@ -30,6 +30,15 @@ class AccountSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = ('id','last_login','is_superuser','username','email','phone_number','is_active')		
 
-	
+class SocialSerializer(UserKnoxSerializer):
+	def get_token(self, obj):
+		
+		from knox.models import AuthToken
+		from knox.settings import knox_settings
+		instance, token = AuthToken.objects.create(obj,knox_settings.TOKEN_TTL)
+		
+		return token
+
+		
 
 

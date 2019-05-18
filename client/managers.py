@@ -6,7 +6,7 @@ class CustomAccountManager(BaseUserManager):
 	"""
 	Custom Account Model Manager used to show it suppose to do during account creation and superuser creation 
 	"""
-	def create_user(self,username, email , password, **extra_fields):
+	def create_user(self,username, email , **extra_fields):
 		'''
 		Create and save an individual account with the given email and password
 		'''
@@ -14,14 +14,15 @@ class CustomAccountManager(BaseUserManager):
 			if email == '':
 				pass
 			account = self.model(username=username, **extra_fields)
-			account.set_password(password)
+			account.set_password(extra_fields.get('password'))
 			account.save()
 			return account
 		if not email:
 			raise ValueError(__('The Email must be set'))
+
 		email = self.normalize_email(email)
 		account = self.model(username=username, email=email, **extra_fields)
-		account.set_password(password)
+		account.set_password(extra_fields.get('password'))
 		account.save()
 		return account 	
 

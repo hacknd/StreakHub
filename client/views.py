@@ -11,7 +11,11 @@ from rest_framework.decorators import api_view
 from knox.views import LoginView
 from knox.auth import TokenAuthentication
 from knox.settings import knox_settings, CONSTANTS
-from client.serializers import CreateAccountSerializer,AccountSerializer
+from client.serializers import CreateAccountSerializer,AccountSerializer,SocialSerializer
+from rest_social_auth.views import SocialKnoxUserAuthView
+from client.utils import GamEngineRedirectAuthorizationBackend
+from knox.models import AuthToken
+from knox import settings
 
 current_format = None
 
@@ -44,10 +48,7 @@ class AccountCreateView(generics.GenericAPIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,*args,**kwargs)
 
 	def get(self, request, format=current_format,*args,**kwargs):
-		print(request.user.is_active)
-		print()
 		return HttpResponseRedirect('/api/1.0')		
-
 
 class AccountLoginView(LoginView):
 	"""
@@ -64,6 +65,33 @@ class AccountLoginView(LoginView):
 		token = json.data["token"]
 		return Response(json.data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(token)})
 
+class AccountSocialLoginView(SocialKnoxUserAuthView):
+	"""
+	Logging in a user that social verification is required and a authorization header is created in the django api side 
+	"""
+	serializer_class = SocialSerializer
+
+	def get(self, request, provider,code=None, format=current_format,*args, **kwargs):
+		# print(request.backend)
+		try:
+			code=request.GET['code']
+			data = GamEngineRedirectAuthorizationBackend(provider, code)	
+		except KeyError:
+			return GamEngineRedirectAuthorizationBackend(provider, code)
+		(request.data).update(data)
+		return self.post(request, format=current_format,*args,**kwargs)
+	
+	def post(self, request, format=current_format, *args, **kwargs):
+		json = super(AccountSocialLoginView, self).post(request, format=current_format)
+		token = AuthToken.objects.get(token_key=json.data['token'][:settings.CONSTANTS.TOKEN_KEY_LENGTH])
+		data = {
+			"token":json.data['token'],
+			"expiry":token.expiry
+		}
+		data["user"] = json.data
+		login(request, token.user, backend='client.backends.AuthBackend')
+		return Response(data, status=status.HTTP_201_CREATED, headers={'Authorization':'Token {0}'.format(json.data['token'])})
+
 class AccountLogoutAllView(APIView):
 	'''
 	Log the user out of all sessions 
@@ -72,19 +100,11 @@ class AccountLogoutAllView(APIView):
 	authentication_classes = (TokenAuthentication, )
 	permission_classes = ( permissions.IsAuthenticated, )
 
-
 	def post(self, request ,format=current_format, *args, **kwargs):
 		request.user.auth_token_set.all().delete()
 		user_logged_out.send(sender=request.user.__class__,
 							request=request, user=request.user)
 		return Response(None, status=status.HTTP_204_NO_CONTENT,*args,**kwargs)
-
-	
-	# def get(self, request, format=current_format, *args,**kwargs):
-	# 	print(request.user.is_active)
-	# 	print()
-	# 	return HttpResponseRedirect('/api/1.0',*args,**kwargs)
-
 
 class AccountLogoutView(APIView):
 	"""
@@ -101,6 +121,4 @@ class AccountLogoutView(APIView):
 		return Response(None , status=status.HTTP_204_NO_CONTENT, *args,**kwargs)
 
 	def get(self, request, format=current_format, *args,**kwargs):
-		print(request.user.is_active)
-		print()
 		return HttpResponseRedirect('/api/1.0', *args,**kwargs)
