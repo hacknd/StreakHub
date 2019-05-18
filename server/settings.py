@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'rest_social_auth',
-    'django.contrib.sites'
+    'django.contrib.sites',
+    'client_audit'
 ]
 
 REST_KNOX = {
@@ -77,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'client_audit.middleware.audit_middleware'
 ]
 
 ROOT_URLCONF = 'server.urls'
