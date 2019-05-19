@@ -190,7 +190,7 @@ AUTHENTICATION_BACKENDS = (
     #Twitch OAuth2 Authentication
     'social_core.backends.twitch.TwitchOAuth2',
     # Custom Authentication Formula
-    'client.backends.AuthBackend',
+    'client_auth.backends.AuthBackend',
     # Default if custom is not working
     'django.contrib.auth.backends.ModelBackend',
     )
