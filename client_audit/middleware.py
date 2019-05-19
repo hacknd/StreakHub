@@ -30,7 +30,6 @@ def audit_middleware(get_response):
                 created_at__gte=now()-limit.time_frame,
                 accepted=True
             ))))
-            print(limit.condition, limit.value, kdf, limit.get_comparison())
             if limit.get_comparison()(limit.value, kdf):
                 return True, limit
         return False, Limit.objects.all().first()
