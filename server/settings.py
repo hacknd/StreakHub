@@ -42,7 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # client apps
     'client',
+    'client_auth',
+    'client_audit',
+
+    # Installed apps
     'rest_framework',
     'rest_framework.authtoken',
     'knox',
@@ -50,7 +56,6 @@ INSTALLED_APPS = [
     'social_django',
     'rest_social_auth',
     'django.contrib.sites',
-    'client_audit'
 ]
 
 REST_KNOX = {
