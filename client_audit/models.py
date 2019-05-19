@@ -28,9 +28,9 @@ class Limit(models.Model):
         ('min', 'MIN'),
         ('ctd', 'COUNT DISTINCT')
     )
-    action = models.TextField()
+    action = models.TextField(blank=True)
     action_method = models.TextField()
-    metric = models.TextField()
+    metric = models.TextField(blank=True)
     metric_method = models.TextField()
     metric_prop = models.TextField(default='id')
     time_frame = models.DurationField()
