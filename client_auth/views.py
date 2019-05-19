@@ -11,7 +11,7 @@ from knox.views import LoginView
 from knox import settings, models, auth
 
 # Local Packages
-from .serializers import CreateAccountSerializer, SocialSerializer
+from .serializers import CreateAccountSerializer, SocialSerializer, AccountSerializer
 from .utils import GamEngineRedirectAuthorizationBackend
 """
 Local Variables
@@ -29,7 +29,7 @@ class AccountCreateView(generics.GenericAPIView):
 	serializer_class = CreateAccountSerializer
 
 	def post(self, request, *args, **kwargs):
-		serializer = self.get_serializer()
+		serializer = self.get_serializer(data=request.data)
 		if serializer.is_valid():
 			account = serializer.save()
 			if account:
@@ -40,7 +40,7 @@ class AccountCreateView(generics.GenericAPIView):
 					json,
 					status=status.HTTP_201_CREATED, *args, **kwargs
 					)
-
+		return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, *args, **kwargs)	
 
 class AccountLoginView(LoginView):
 	"""
