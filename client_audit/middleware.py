@@ -21,7 +21,8 @@ def audit_middleware(get_response):
 
     def check_limit(request):
         ip = request.META['REMOTE_ADDR']
-        for limit in Limit.objects.all():
+        namespace = resolve(request.path).route
+        for limit in Limit.objects.filter(action=namespace, action_method=request.method):
             kdf = limit.get_operation()(list(map(lambda x: getattr(x, limit.metric_prop), UserActions.objects.filter(
                 route=limit.metric,
                 method=limit.metric_method,
