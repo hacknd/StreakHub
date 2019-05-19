@@ -1,12 +1,16 @@
-from rest_framework import exceptions, status
-from social_core.backends.utils import get_backend
-from server.settings import AUTHENTICATION_BACKENDS
-from rest_framework.reverse import reverse
-from django.contrib.sites.models import Site
-from decouple import config
+#Django Packages
 from django.utils.translation import ugettext_lazy as __
+from django.contrib.sites.models import Site
 from django.shortcuts import redirect
+
+#Installed Packages
+from rest_framework import exceptions, status, reverse
+from social_core.backends.utils import get_backend
+from decouple import config
 import urllib
+
+#Local Packages
+from server.settings import AUTHENTICATION_BACKENDS
 
 class GamEngineException(exceptions.APIException):
 	"""
@@ -27,7 +31,7 @@ def GamEngineRedirectAuthorizationBackend(backend, code):
 				backend_class=get_backend(AUTHENTICATION_BACKENDS, backend)
 				authorization_url=backend_class.AUTHORIZATION_URL
 				url_parameters={
-					'redirect_uri':('http://{}{}').format(Site.objects.get_current().domain, reverse('account-social-login', args=(backend,))),
+					'redirect_uri':('http://{}{}').format(Site.objects.get_current().domain, reverse.reverse('account-social-login', args=(backend,))),
 					'response_type':backend_class.RESPONSE_TYPE,
 					'scope':[scope for scope in backend_class.DEFAULT_SCOPE if scope != 'openid'][0],
 					'client_id':config('SOCIAL_AUTH_'+backend.upper().replace('-','_')+'_KEY')
@@ -40,7 +44,7 @@ def GamEngineRedirectAuthorizationBackend(backend, code):
 		
 		data = {
 			"code":code,
-			"redirect_uri":('http://{}{}').format(Site.objects.get_current().domain, reverse('account-social-login', args=(backend,))),
+			"redirect_uri":('http://{}{}').format(Site.objects.get_current().domain, reverse.reverse('account-social-login', args=(backend,))),
 			"provider":backend
 		}
 		return	data
