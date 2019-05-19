@@ -72,7 +72,7 @@ CORS_ORIGIN_WHITELIST = (
     )
 
 
-AUTH_USER_MODEL = 'client.Account'
+AUTH_USER_MODEL = 'client_auth.Account'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
