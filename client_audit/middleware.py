@@ -13,14 +13,14 @@ def audit_middleware(get_response):
             route=namespace,
             method=request.method,
             data=request.body,
-            ip_address=request.META['REMOTE_ADDR'],
+            ip_address=request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[-1].strip(),
             token='token_madness',
             user=None,
             accepted=not blocked
         )
 
     def check_limit(request):
-        ip = request.META['REMOTE_ADDR']
+        ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[-1].strip()
         namespace = resolve(request.path).route
         for limit in Limit.objects.filter(action=namespace, action_method=request.method):
             kdf = limit.get_operation()(list(map(lambda x: getattr(x, limit.metric_prop), UserActions.objects.filter(
