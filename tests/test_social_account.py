@@ -5,8 +5,22 @@ from rest_framework import test, reverse
 import httpretty
 import json
 import requests
-
-
+import unittest
+EPIC_JSON={
+    "token": "487793df5d9fd76966a8ff1d3915e8035482597944a230355d44e0a92a52edee",
+    "expiry": "2019-05-29T20:18:48.768478Z",
+    "user": {
+        "id": 2,
+        "token": "487793df5d9fd76966a8ff1d3915e8035482597944a230355d44e0a92a52edee",
+        "first_name": "",
+        "last_name": "",
+        "username": "_ber.ni.e_",
+        "email": "benkaranja43@gmail.com",
+        "is_email_active": False,
+        "phone_number": "",
+        "is_phone_active": False
+    }
+}
 class AccountSocialAccountTest(test.APITestCase):
 	def setUp(self):
 		'''
@@ -32,7 +46,6 @@ class AccountSocialAccountTest(test.APITestCase):
 		self.assertEqual(resp.status_code, 500)
 		self.assertEqual(resp.data['detail'], __('Missing Backend'))
 
-	
 	def test_social_account_for_discord(self):
 		self.provider='discord'
 		resp = self.client.get(reverse.reverse('account-social-login', args=(self.provider,)))
@@ -45,14 +58,14 @@ class AccountSocialAccountTest(test.APITestCase):
 			)
 		response=requests.get(resp.url)
 		print(response.json())
+
 		httpretty.register_uri(
 			httpretty.POST,
 			response.json()['redirect_uri'],
-			body=response.json(),
+			body=EPIC_JSON,
 			status=201
 			)
-		post_response = self.client.post( 
-			response.json()['redirect_uri'])
+		post_response = self.client.post(path=reverse.reverse('account-social-login', kwargs=(self.provider,)))
 		print(post_response)
 		self.assertEqual(post_response.status_code, 201)
 		# self.assertEqual(post_response.status_code,201)
