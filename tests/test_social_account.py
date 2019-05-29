@@ -15,6 +15,8 @@ class AccountSocialAccountTest(APITestCase):
 		Setting up the new site for the new default application
 		'''
 		httpretty.enable()
+
+
 	def _domain_information_pull_with_json(self, provider):
 		return json.dumps(
 			{
@@ -23,6 +25,7 @@ class AccountSocialAccountTest(APITestCase):
 			"provider":provider
 			}
 			)	
+			
 	def test_social_account_with_no_valid_provider(self):
 		'''
 		Testing the instance of a foreign backend
@@ -32,6 +35,8 @@ class AccountSocialAccountTest(APITestCase):
 		print(resp.data)
 		self.assertEqual(resp.status_code, 500)
 		self.assertEqual(resp.data['detail'], __('Missing Backend'))
+
+	
 	def test_social_account_for_discord(self):
 		provider='discord'
 		resp = self.client.get(reverse.reverse('account-social-login', args=(provider,)))
