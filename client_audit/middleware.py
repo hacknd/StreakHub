@@ -24,14 +24,14 @@ def audit_middleware(get_response):
         ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[-1].strip()
         namespace = resolve(request.path).route
         for limit in Limit.objects.filter(action=namespace, action_method=request.method):
-            kdf = limit.get_operation()(list(map(lambda x: getattr(x, limit.metric_prop), UserActions.objects.filter(
+            limit_defined = limit.get_operation()(list(map(lambda x: getattr(x, limit.metric_prop), UserActions.objects.filter(
                 route=limit.metric,
                 method=limit.metric_method,
                 ip_address=ip,
                 created_at__gte=now()-limit.time_frame,
                 accepted=True
             ))))
-            if limit.get_comparison()(limit.value, kdf):
+            if limit.get_comparison()(limit.value, limit_defined):
                 return True, limit
         return False, Limit.objects.all().first()
 
