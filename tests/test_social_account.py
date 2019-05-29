@@ -7,8 +7,7 @@ import json
 import requests
 
 
-
-class AccountSocialAccountTest(APITestCase):
+class AccountSocialAccountTest(test.APITestCase):
 	def setUp(self):
 		'''
 		Setting up the new site for the new default application
