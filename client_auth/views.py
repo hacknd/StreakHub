@@ -63,19 +63,17 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 	"""
 	Logging in a user that social verification is required and a authorization header is created in the django api side
 	"""
-
 	serializer_class = SocialSerializer
-	def get(self, request, provider, code=None, format=current_format, *args, **kwargs):
-		# print(request.backend)
+	def get(self, request, provider, code=None, format=current_format):
 		try:
 			code = request.GET['code']
 			data = GamEngineRedirectAuthorizationBackend(provider, code)
 		except KeyError:
 			return GamEngineRedirectAuthorizationBackend(provider, code)
 		(request.data).update(data)
-		return self.post(request, format=current_format, *args, **kwargs)
+		return self.post(request, format=current_format)
 
-	def post(self, request, format=current_format, *args, **kwargs):
+	def post(self, request, format=current_format):
 		json = super(AccountSocialLoginView, self).post(
 			request, format=current_format)
 		token = models.AuthToken.objects.get(
