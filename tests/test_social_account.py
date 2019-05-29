@@ -32,3 +32,14 @@ class AccountSocialAccountTest(APITestCase):
 		print(resp.data)
 		self.assertEqual(resp.status_code, 500)
 		self.assertEqual(resp.data['detail'], __('Missing Backend'))
+	def test_social_account_for_discord(self):
+		provider='discord'
+		resp = self.client.get(reverse.reverse('account-social-login', args=(provider,)))
+		self.assertEqual(resp.status_code, 302)	
+		httpretty.register_uri(httpretty.GET, resp.url,body=self._domain_information_pull_with_json(provider),  status=200)
+		response=requests.get(resp.url)
+		print(response.json()['redirect_uri'])
+		httpretty.register_uri(httpretty.GET, response.json()['redirect_uri'])
+		post_response = self.client.post(response.json(), reverse.reverse('account-social-login', args=(provider,)), format='json')
+	
+		# self.assertEqual(post_response.status_code,201)
