@@ -9,7 +9,7 @@ def audit_middleware(get_response):
 
     def store_action(request, blocked):
         namespace = resolve(request.path).route
-        new_body=(__import__('re').sub('password=[^\/]+&', '', (request.body).decode('utf-8'))).encode('utf-8') 
+        new_body=(__import__('re').sub(r'password=[^\/]+&', '', (request.body).decode('utf-8'))).encode('utf-8') 
         UserActions.objects.create(
             route=namespace,
             method=request.method,
