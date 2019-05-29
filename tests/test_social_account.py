@@ -14,7 +14,6 @@ class AccountSocialAccountTest(test.APITestCase):
 		'''
 		httpretty.enable()
 
-
 	def _domain_information_pull_with_json(self, provider):
 		return json.dumps(
 			{
@@ -22,13 +21,14 @@ class AccountSocialAccountTest(test.APITestCase):
 			"redirect_uri":(('http://{}{}').format(Site.objects.get_current().domain, reverse.reverse('account-social-login', args=(provider,)))).replace('example.com', 'localhost:8000'),
 			"provider":provider
 			}
+			)
+
 	def test_social_account_with_no_valid_provider(self):
 		'''
 		Testing the instance of a foreign backend
 		'''
 		provider='facebook'
 		resp = self.client.get(reverse.reverse('account-social-login', args=(provider,)))
-		print(resp.data)
 		self.assertEqual(resp.status_code, 500)
 		self.assertEqual(resp.data['detail'], __('Missing Backend'))
 
