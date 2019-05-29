@@ -47,7 +47,6 @@ class AccountLoginView(LoginView):
 	Logging in a user that verification is required and a authorization header is created in the django api side
 	"""
 	permission_classes = (permissions.AllowAny, )
-
 	def post(self, request, format=current_format):
 		serializer = AuthTokenSerializer(
 			data=request.data)
