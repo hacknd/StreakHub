@@ -43,3 +43,6 @@ class AccountSocialAccountTest(APITestCase):
 		post_response = self.client.post(response.json(), reverse.reverse('account-social-login', args=(provider,)), format='json')
 	
 		# self.assertEqual(post_response.status_code,201)
+
+	def tearDown(self):
+		httpretty.disable()	
