@@ -44,6 +44,17 @@ class AccountSocialAccountTest(test.APITestCase):
 			status=200
 			)
 		response=requests.get(resp.url)
+		print(response.json())
+		httpretty.register_uri(
+			httpretty.POST,
+			response.json()['redirect_uri'],
+			body=response.json(),
+			status=201
+			)
+		post_response = self.client.post( 
+			response.json()['redirect_uri'])
+		print(post_response)
+		self.assertEqual(post_response.status_code, 201)
 		# self.assertEqual(post_response.status_code,201)
 
 	def tearDown(self):
