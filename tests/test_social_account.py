@@ -60,18 +60,16 @@ class AccountSocialAccountTest(test.APITestCase):
 			status=200
 			)
 		response=requests.get(resp.url)
-		print(response.json())
-
 		httpretty.register_uri(
 			httpretty.POST,
 			response.json()['redirect_uri'],
 			body=EPIC_JSON,
 			status=201
 			)
-		post_response = self.client.post(path=reverse.reverse('account-social-login', kwargs=(self.provider,)))
-		print(post_response)
+		url=reverse.reverse('account-social-login', args=(self.provider,))	
+		post_response = self.client.post( url, format='json')
+		print(post_response)	
 		self.assertEqual(post_response.status_code, 201)
-		# self.assertEqual(post_response.status_code,201)
 
 	def tearDown(self):
 		httpretty.disable()	
