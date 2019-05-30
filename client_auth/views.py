@@ -73,7 +73,7 @@ class AccountSocialLoginView(SocialKnoxUserAuthView):
 		(request.data).update(data)
 		return self.post(request, format=current_format)
 
-	def post(self, request, format=current_format):
+	def post(self, request, provider, format=current_format):
 		json = super(AccountSocialLoginView, self).post(
 			request, format=current_format)
 		token = models.AuthToken.objects.get(
