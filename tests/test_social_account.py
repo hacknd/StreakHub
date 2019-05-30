@@ -47,6 +47,9 @@ class AccountSocialAccountTest(test.APITestCase):
 		self.assertEqual(resp.data['detail'], __('Missing Backend'))
 
 	def test_social_account_for_discord(self):
+		'''
+		Testing instance for discord application
+		'''	
 		self.provider='discord'
 		resp = self.client.get(reverse.reverse('account-social-login', args=(self.provider,)))
 		self.assertEqual(resp.status_code, 302)	
