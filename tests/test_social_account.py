@@ -70,6 +70,7 @@ class AccountSocialAccountTest(test.APITestCase):
 		custom_resp=requests.post(response.json()['redirect_uri'], response.json())
 		self.assertEqual(custom_resp.status_code, 201)
 		self.assertEqual(custom_resp.json()['token'],custom_resp.json()['user']['token'] )	
+
 	def test_social_account_for_twitch(self):
 		'''
 		Testing instance for discord application
