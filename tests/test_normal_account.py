@@ -25,7 +25,6 @@ class AccountManagerTests(TestCase):
 		self.assertFalse(account.is_staff)
 		self.assertFalse(account.is_superuser)
 
-
 		with self.assertRaises(TypeError):
 			Account.objects.create_user()
 		with self.assertRaises(TypeError):
@@ -44,7 +43,6 @@ class AccountManagerTests(TestCase):
 		self.assertEqual(admin_account.username, admin_member.username)
 		self.assertEqual(admin_account.phone_number, admin_member.phone_number)
 
-		# print(type(admin_account.email))
 		self.assertEqual(len(admin_account.email), 0)
 		with self.assertRaises(ValueError):
 			Account.objects.create_superuser(
