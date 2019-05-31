@@ -63,8 +63,6 @@ class AccountSocialAccountTest(test.APITestCase):
 		httpretty.register_uri(
 			httpretty.POST,
 			response.json()['redirect_uri'],
-			body=EPIC_JSON,
-			status=201
 			body=json.dumps(EPIC_JSON),
 			status=201,
 			content_type='text/json'
