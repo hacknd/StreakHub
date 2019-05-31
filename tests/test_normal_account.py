@@ -4,13 +4,13 @@ from django.contrib.auth import get_user_model
 #Local Packages
 from client.models import Member
 from knox.models import AuthToken
+from knox import settings
 #Rest Framework Packages
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 #Universal Packages
 import base64
-
 '''
 Set across variables
 '''
@@ -189,7 +189,7 @@ class AccountLoginTest(APITestCase):
 
 	def token_verification(self,auth_token):
 		token=auth_token.split('Token ')[1]
-		return token[:__import__('knox').settings.CONSTANTS.TOKEN_KEY_LENGTH]
+		return token[:settings.CONSTANTS.TOKEN_KEY_LENGTH]
 
 	def setUp(self):
 		# Originally creating a user from scratch to add up to users at the same time
