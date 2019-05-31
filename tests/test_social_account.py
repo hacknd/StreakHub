@@ -1,11 +1,15 @@
+#Django packages
 from django.utils.translation import ugettext_lazy as __
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
+#Rest Framework Packages
 from rest_framework import test, reverse
+#Local packages installed
 import httpretty
 import json
 import requests
 import unittest
+
 EPIC_JSON={
     "token": "487793df5d9fd76966a8ff1d3915e8035482597944a230355d44e0a92a52edee",
     "expiry": "2019-05-29T20:18:48.768478Z",
@@ -27,7 +31,7 @@ class AccountSocialAccountTest(test.APITestCase):
 		Setting up the new site for the new default application
 		'''
 		httpretty.enable()
-
+		
 	def _domain_information_pull_with_json(self, provider):
 		return json.dumps(
 			{
