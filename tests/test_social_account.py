@@ -65,6 +65,13 @@ class AccountSocialAccountTest(test.APITestCase):
 			response.json()['redirect_uri'],
 			body=EPIC_JSON,
 			status=201
+			body=json.dumps(EPIC_JSON),
+			status=201,
+			content_type='text/json'
+			)	
+		custom_resp=requests.post(response.json()['redirect_uri'], response.json())
+		self.assertEqual(custom_resp.status_code, 201)
+		self.assertEqual(custom_resp.json()['token'],custom_resp.json()['user']['token'] )	
 			)
 		url=reverse.reverse('account-social-login', args=(self.provider,))	
 		post_response = self.client.post( url, format='json')
