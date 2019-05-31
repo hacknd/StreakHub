@@ -71,10 +71,6 @@ class AccountSocialAccountTest(test.APITestCase):
 		self.assertEqual(custom_resp.status_code, 201)
 		self.assertEqual(custom_resp.json()['token'],custom_resp.json()['user']['token'] )	
 			)
-		url=reverse.reverse('account-social-login', args=(self.provider,))	
-		post_response = self.client.post( url, format='json')
-		print(post_response)	
-		self.assertEqual(post_response.status_code, 201)
 
 	def tearDown(self):
 		httpretty.disable()	
