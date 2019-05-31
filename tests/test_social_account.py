@@ -95,5 +95,30 @@ class AccountSocialAccountTest(test.APITestCase):
 		self.assertEqual(custom_resp.status_code, 201)
 		self.assertEqual(custom_resp.json()['token'],custom_resp.json()['user']['token'] )			
 
+	def test_social_account_for_google(self):
+		'''
+		Testing instance for discord application
+		'''	
+		self.provider='google-oauth2'
+		resp = self.client.get(reverse.reverse('account-social-login', args=(self.provider,)))
+		self.assertEqual(resp.status_code, 302)	
+		httpretty.register_uri(
+			httpretty.GET,
+			resp.url,
+			body=self._domain_information_pull_with_json(self.provider),
+			status=200
+			)
+		response=requests.get(resp.url)
+		httpretty.register_uri(
+			httpretty.POST,
+			response.json()['redirect_uri'],
+			body=json.dumps(EPIC_JSON),
+			status=201,
+			content_type='text/json'
+			)	
+		custom_resp=requests.post(response.json()['redirect_uri'], response.json())
+		self.assertEqual(custom_resp.status_code, 201)
+		self.assertEqual(custom_resp.json()['token'],custom_resp.json()['user']['token'] )			
+	
 	def tearDown(self):
 		httpretty.disable()	
