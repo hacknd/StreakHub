@@ -1,12 +1,19 @@
+#Django packages
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+#Local Packages
 from client.models import Member
+from knox.models import AuthToken
+#Rest Framework Packages
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
+#Universal Packages
 import base64
-# from rest_framework.authtoken.models import Token
-from knox.models import AuthToken
+
+'''
+Set across variables
+'''
 Account = get_user_model()
 
 # Create your tests here.
