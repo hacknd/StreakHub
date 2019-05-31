@@ -32,11 +32,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class SocialSerializer(UserKnoxSerializer):
 	def get_token(self, obj):
-		
-		from knox.models import AuthToken
-		from knox.settings import knox_settings
-		instance, token = AuthToken.objects.create(obj,knox_settings.TOKEN_TTL)
-		
+		instance, token = models.AuthToken.objects.create(obj,settings.knox_settings.TOKEN_TTL)
 		return token
 
 		
