@@ -36,16 +36,11 @@ def audit_middleware(get_response):
         return False, Limit.objects.all().first()
 
     def middleware(request):
-
         blocked, limit = check_limit(request)
-
         store_action(request, blocked)
-
         if blocked:
             return JsonResponse({"message": limit.error_message}, status=limit.error_code)
-
         response = get_response(request)
-
         return response
 
     return middleware
