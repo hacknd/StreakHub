@@ -49,9 +49,6 @@ class AccountManagerTests(TestCase):
 				username='super', email='',password='foo', is_superuser=False
 				)
 
-
-
-
 class AccountsCreationTest(APITestCase):
 	def setUp(self):
 		
@@ -80,7 +77,6 @@ class AccountsCreationTest(APITestCase):
 		# Additionally, we want to return the username and email successful creation
 		self.assertEqual(response.data['username'], data['username'])
 		self.assertEqual(response.data['email'], data['email'])	
-
 	
 	def test_create_account_with_short_password(self):
 		"""
@@ -97,7 +93,6 @@ class AccountsCreationTest(APITestCase):
 		self.assertEqual(Account.objects.count(), 1)
 		self.assertEqual(len(response.data['password']), 1)
 
-
 	def test_create_account_with_no_password(self):
 		data = {
 			'username': 'foobar',
@@ -109,7 +104,6 @@ class AccountsCreationTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 		self.assertEqual(Account.objects.count(), 1)
 		self.assertEqual(len(response.data['password']), 1)
-
 
 	def test_create_account_with_long_username(self):
 		foo = 'foo'*30
@@ -123,7 +117,6 @@ class AccountsCreationTest(APITestCase):
 		self.assertEqual(Account.objects.count(), 1)
 		self.assertEqual(len(response.data['username']), 1)
 
-
 	def test_create_account_with_no_username(self):
 		data = {
 			'username': '',
@@ -134,7 +127,6 @@ class AccountsCreationTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 		self.assertEqual(Account.objects.count(), 1)
 		self.assertEqual(len(response.data['username']), 1)	
-
 
 	def test_create_account_with_preexisting_username(self):
 		data = {
