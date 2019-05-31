@@ -264,9 +264,6 @@ class AccountLoginTest(APITestCase):
 		self.assertEqual(1,1)
 		self.assertTrue(all(e.token_key for e in AuthToken.objects.all()))
 
-
-
-
 	def test_authenticated_account_with_token_recognition_decidestologoutforaspecificdevice(self):
 		"""
 		Ensuring the user in the system has token Authenticatian naa mean and log out once
@@ -288,7 +285,6 @@ class AccountLoginTest(APITestCase):
 		self.client.credentials(HTTP_AUTHORIZATION=response['Authorization'])
 		self.client.post(url, {}, format='json')
 		self.assertEqual(AuthToken.objects.count(), 1, 'other tokens should remain after logout')
-
 		
 	def test_authenticated_account_with_token_recognition_decidestologoutforalldevices(self):
 		"""
