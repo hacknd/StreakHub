@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'client',
     'client_auth',
     'client_audit',
+    'client_ticket',
 
     # Installed apps
     'rest_framework',
