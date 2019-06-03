@@ -23,22 +23,11 @@ class Account(AbstractUser):
 		blank=True
 		)
 	is_phone_active = models.BooleanField(default=False)
-	account_membership_id = models.CharField(
-		max_length=20,
-		unique=True,
-		blank=True
-		)
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = []
 	
 	objects = CustomAccountManager()
-
-	@receiver(post_save, sender='client.Member')
-	def account_membership_id(sender, instance, created, **kwargs):
-		if created:
-			pass
-
 
 	def __str__(self):
 		return self.username
