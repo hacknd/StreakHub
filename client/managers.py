@@ -26,5 +26,4 @@ class FollowManager(models.Manager):
 			qs.delete()
 			return True
 		except self.model.DoesNotExist:
-			raise GamEngineException(code=301, detail=__('No Follow Relation'))
-				
+			raise GamEngineException(code=301, detail=__('No Follow Relation'))			
