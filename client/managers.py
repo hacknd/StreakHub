@@ -16,8 +16,11 @@ class FollowManager(models.Manager):
 
 	def add_follower(self, followers, followee):
 		if followers == followee:
-			GamEngineException(code=400,detail=__('Impossible Action'))
+			raise GamEngineException(code=400,detail=__('Impossible Action'))
 		relation, created = self.model.objects.get_or_create(followers=followers, followee=followee)
+
+		if created is False:
+			raise GamEngineException(code=400, detail=__("User '%s' already follows '%s'" % (follower, followee)))
 		return relation
 
 	def remove_follower(self, followers, followee):
