@@ -3,7 +3,8 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from client_auth.models import Role
-import timezone
+from django.utils.timezone import now
+from .managers import FollowManager
 
 class Member(models.Model):
 	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="user_members")
@@ -57,7 +58,16 @@ class Member(models.Model):
 	def __str__(self):
 		return self.user.username 
 
+class Follow(models.Model):
+	followers=models.ForeignKey('client.Member', on_delete=models.CASCADE, related_name='following')
+	followee=models.ForeignKey('client.Member', on_delete=models.CASCADE,related_name='followers')
+	created_by=models.DateTimeField(default=now)
 
+	objects = FollowManager()
+	
+	def __str__(self):
+		return 'User {0} Follows {1}'.format(self.followers, self.followee)
+		
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
@@ -102,13 +112,3 @@ class Bookmarks(models.Model):
 
 	def __str__(self):
 		return self.names
-
-class Follow(models.Model):
-	followers=models.ForeignKey('client.Member', related_name='following')
-	followee=models.ForeignKey('client.Member', related_name='followers')
-	created_by=models.DateTimeField(default=timezone.now)
-
-	objects = FollowManager()
-	
-	def __str__(self):
-		return 'User {0} Follows {1}'.format(slef.followers, self.followee)
