@@ -3,6 +3,7 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from client_auth.models import Role
+import timezone
 
 class Member(models.Model):
 	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="user_members")
@@ -17,8 +18,6 @@ class Member(models.Model):
 	community = models.ManyToManyField('client.Community',  blank=True,related_name='community_member')
 	tournament = models.ManyToManyField('client.Tournament', blank=True,related_name='tournament_member')
 	bookmarks = models.ManyToManyField('client.Bookmarks', blank=True, related_name='bookmarks_member')
-	following = models.ManyToManyField('client.Following', blank=True, related_name='following_member')
-	followers = models.ManyToManyField('client.Followers', blank=True, related_name='followers_member')
 	roles = models.ManyToManyField('client_auth.Role',related_name='user_role')
 
 
@@ -104,21 +103,12 @@ class Bookmarks(models.Model):
 	def __str__(self):
 		return self.names
 
-class Following(models.Model):
-	names = models.CharField(max_length=200,default='ooof')
+class Follow(models.Model):
+	followers=models.ForeignKey('client.Member', related_name='following')
+	followee=models.ForeignKey('client.Member', related_name='followers')
+	created_by=models.DateTimeField(default=timezone.now)
 
-	class Meta:
-		verbose_name_plural = 'Followings'
-
+	objects = FollowManager()
+	
 	def __str__(self):
-		return self.names
-
-class Followers(models.Model):
-	names = models.CharField(max_length=200,default='ooof')
-
-	class Meta:
-		verbose_name_plural = 'Followers'
-
-	def __str__(self):
-		return self.names
-
+		return 'User {0} Follows {1}'.format(slef.followers, self.followee)
