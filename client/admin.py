@@ -7,6 +7,5 @@ admin.site.register(Tournament)
 admin.site.register(Bookmarks)
 admin.site.register(Blog)
 admin.site.register(Post)
-admin.site.register(Following)
-admin.site.register(Followers)
+admin.site.register(Follow)
 
