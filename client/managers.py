@@ -1,23 +1,23 @@
 from django.db import models
+from client.urls import urlpatterns
 from client_auth.utils import GamEngineException
-from client.models import Follow
 
 class FollowManager(models.Manager):	
 	def followers(self, user):
-		qs = Follow.objects.filter(followee=user).all()
-		followers = [u.follower for u in qs]
+		qs = self.model.objects.filter(followee=user).all()
+		followers = [u.followers for u in qs]
 		return followers
 
 	def following(self, user):
-		qs = Follow.objects.filter(follower=user).all()
+		qs = self.model.objects.filter(followers=user).all()
 		following = [u.followee for u in qs]
 		return following
 
-	def add_follower(self, follower, followee):
-		if follower == followee:
+	def add_follower(self, followers, followee):
+		if followers == followee:
 			GamEngineException(code=400,detail=__('Impossible Action'))
-		relation, created = Follow.objects.get_or_create(follower=follower, followee=followee)
+		relation, created = self.model.objects.get_or_create(followers=followers, followee=followee)
 		return relation
 
-	def remove_follower(self, follower, followee):
+	def remove_follower(self, followers, followee):
 		return 'string'
