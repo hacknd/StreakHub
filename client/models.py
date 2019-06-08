@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from client_auth.models import Role
 from django.utils.timezone import now
 from .managers import FollowManager
+from client_auth.utils import GamEngineException
+from django.utils.translation import ugettext_lazy as __
 
 class Member(models.Model):
 	user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,related_name="user_members")
@@ -64,10 +66,19 @@ class Follow(models.Model):
 	created_by=models.DateTimeField(default=now)
 
 	objects = FollowManager()
-	
+
+	class Meta:
+		verbose_name = "Follow"
+		verbose_name_plural = "Follows"
+		unique_together = ("followers", "followee")
+	def save(self, *args, **kwargs):
+		if self.followers == self.followee:
+			raise GamEngineException(detail=__('Impossible Action'))
+		
+		return super(Follow, self).save(*args, **kwargs)
 	def __str__(self):
 		return 'User {0} Follows {1}'.format(self.followers, self.followee)
-		
+
 class Blog(models.Model):
 	names = models.CharField(max_length=200,default='ooof')
 
