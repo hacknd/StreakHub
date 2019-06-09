@@ -20,7 +20,7 @@ class FollowManager(models.Manager):
 		relation, created = self.model.objects.get_or_create(followers=followers, followee=followee)
 
 		if created is False:
-			raise GamEngineException(code=400, detail=__("User '%s' already follows '%s'" % (follower, followee)))
+			raise GamEngineException(code=500, detail=__("User '%s' already follows '%s'" % (followers, followee)))
 		return relation
 
 	def remove_follower(self, followers, followee):
