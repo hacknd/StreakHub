@@ -12,6 +12,12 @@ class UserActions(models.Model):
     accepted = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural = 'User Actions'
+
+    def __str__(self):
+        return f"(IP Address=={self.ip_address}) with method {self.method} on route {self.route}"    
+
 
 class Limit(models.Model):
     CONDITION_CHOICES = (
